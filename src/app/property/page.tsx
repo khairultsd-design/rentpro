@@ -1,3 +1,4 @@
+import { properties } from "@/features/property/data";
 import Link from "next/link";
 
 export default function PropertyPage() {
@@ -19,11 +20,26 @@ export default function PropertyPage() {
 
       </div>
 
-      <div className="bg-white rounded-xl shadow p-6">
+ <div className="bg-white rounded-xl shadow p-6">
 
-        <p>No properties found.</p>
+  {properties.map((property) => (
+    <div
+      key={property.id}
+      className="border-b py-4"
+    >
+      <h2 className="text-xl font-semibold">
+        {property.name}
+      </h2>
 
-      </div>
+      <p>{property.type}</p>
+
+      <p className="text-gray-500">
+        {property.address}
+      </p>
+    </div>
+  ))}
+
+</div>
 
     </>
   );
