@@ -2,8 +2,8 @@ import Link from "next/link";
 import PropertyTable from "@/features/property/components/PropertyTable";
 import { getProperties } from "@/features/property/services/property.service";
 
-export default function PropertyPage() {
-  const properties = getProperties();
+export default async function PropertyPage() {
+  const properties = await getProperties();
 
   return (
     <>
