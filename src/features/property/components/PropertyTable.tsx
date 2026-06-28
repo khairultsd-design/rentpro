@@ -1,3 +1,4 @@
+import StatusBadge from "@/components/StatusBadge";
 import { Property } from "../types/property";
 
 type PropertyTableProps = {
@@ -41,11 +42,11 @@ export default function PropertyTable({
               </td>
 
               <td className="p-4">
-                {property.agreementEnd}
+                {property.agreementEnd.toLocaleDateString("en-GB")}
               </td>
 
               <td className="text-center p-4">
-                {property.status}
+                <StatusBadge status={property.status} />
               </td>
             </tr>
           ))}

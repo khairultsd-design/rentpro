@@ -27,7 +27,52 @@ export default function NewPropertyPage() {
           </select>
         </div>
 
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg">
+        <TextInput
+          label="Address"
+          placeholder="Full property address"
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+
+          <TextInput
+            label="Agreement Start"
+            type="date"
+          />
+
+          <TextInput
+            label="Agreement End"
+            type="date"
+          />
+
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+
+          <TextInput
+            label="Total Rooms"
+            type="number"
+          />
+
+          <TextInput
+            label="Available Rooms"
+            type="number"
+          />
+
+        </div>
+
+        <div className="mb-8">
+          <label className="block font-semibold mb-2">
+            Status
+          </label>
+
+          <select className="w-full border rounded-lg p-3">
+            <option>Active</option>
+            <option>Expiring Soon</option>
+            <option>Expired</option>
+          </select>
+        </div>
+
+        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
           Save Property
         </button>
 
