@@ -1,3 +1,4 @@
+import Link from "next/link";
 import StatusBadge from "@/components/StatusBadge";
 import { Property } from "../types/property";
 
@@ -24,9 +25,15 @@ export default function PropertyTable({
 
         <tbody>
           {properties.map((property) => (
-            <tr key={property.id} className="border-t">
+            <tr key={property.id} className="border-t hover:bg-slate-50">
+
               <td className="p-4 font-semibold">
-                {property.name}
+                <Link
+                  href={`/property/${property.id}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  {property.name}
+                </Link>
               </td>
 
               <td className="p-4">
@@ -42,12 +49,13 @@ export default function PropertyTable({
               </td>
 
               <td className="p-4">
-                {property.agreementEnd.toLocaleDateString("en-GB")}
+                {new Date(property.agreementEnd).toLocaleDateString()}
               </td>
 
               <td className="text-center p-4">
-                <StatusBadge status={property.status} />
+                <StatusBadge status={property.status as any} />
               </td>
+
             </tr>
           ))}
         </tbody>
