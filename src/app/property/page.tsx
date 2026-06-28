@@ -1,12 +1,13 @@
-import { properties } from "@/features/property/data";
 import Link from "next/link";
+import PropertyTable from "@/features/property/components/PropertyTable";
+import { getProperties } from "@/features/property/services/property.service";
 
 export default function PropertyPage() {
+  const properties = getProperties();
+
   return (
     <>
-
       <div className="flex justify-between items-center mb-8">
-
         <h1 className="text-3xl font-bold">
           🏢 Properties
         </h1>
@@ -17,30 +18,9 @@ export default function PropertyPage() {
         >
           + Add Property
         </Link>
-
       </div>
 
- <div className="bg-white rounded-xl shadow p-6">
-
-  {properties.map((property) => (
-    <div
-      key={property.id}
-      className="border-b py-4"
-    >
-      <h2 className="text-xl font-semibold">
-        {property.name}
-      </h2>
-
-      <p>{property.type}</p>
-
-      <p className="text-gray-500">
-        {property.address}
-      </p>
-    </div>
-  ))}
-
-</div>
-
+      <PropertyTable properties={properties} />
     </>
   );
 }
