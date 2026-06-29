@@ -17,6 +17,21 @@ export async function getPropertyById(id: string) {
   });
 }
 
+export async function getPropertyWithRooms(id: string) {
+  return prisma.property.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      rooms: {
+        orderBy: {
+          roomNumber: "asc",
+        },
+      },
+    },
+  });
+}
+
 export async function createProperty(data: CreatePropertyDto) {
   return prisma.property.create({
     data,

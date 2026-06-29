@@ -1,7 +1,13 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+import {
+  createRoom as createRoomService,
+  updateRoom as updateRoomService,
+  deleteRoom as deleteRoomService,
+} from "../services/room.service";
 
 type CreateRoomInput = {
   propertyId: string;
@@ -11,29 +17,36 @@ type CreateRoomInput = {
 };
 
 export async function createRoom(data: CreateRoomInput) {
-  await prisma.room.create({
-    data: {
-      propertyId: data.propertyId,
-      roomNumber: data.roomNumber,
-      floor: data.floor || null,
-      monthlyRent: data.monthlyRent,
-      status: "Available",
-    },
-  });
-
-  await prisma.property.update({
-    where: {
-      id: data.propertyId,
-    },
-    data: {
-      totalRooms: {
-        increment: 1,
-      },
-      availableRooms: {
-        increment: 1,
-      },
-    },
+  await createRoomService({
+    propertyId: data.propertyId,
+    roomNumber: data.roomNumber,
+    floor: data.floor,
+    monthlyRent: data.monthlyRent,
+    status: "Available",
   });
 
   revalidatePath(`/property/${data.propertyId}`);
+}
+
+export async function updateRoom(
+  roomId: string,
+  propertyId: string,
+  formData: FormData
+) {
+  await updateRoomService(roomId, {
+    roomNumber: formData.get("roomNumber") as string,
+    floor: (formData.get("floor") as string) || undefined,
+    monthlyRent: Number(formData.get("monthlyRent")),
+  });
+
+  revalidatePath(`/property/${propertyId}`);
+  redirect(`/property/${propertyId}`);
+}
+
+export async function deleteRoom(roomId: string) {
+  const propertyId = await deleteRoomService(roomId);
+
+  if (!propertyId) return;
+
+  revalidatePath(`/property/${propertyId}`);
 }

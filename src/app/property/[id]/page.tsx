@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getPropertyById } from "@/features/property/services/property.service";
+import { getPropertyWithRooms } from "@/features/property/services/property.service";
 
 type PageProps = {
   params: Promise<{
@@ -14,7 +14,7 @@ export default async function PropertyDetailPage({
 }: PageProps) {
   const { id } = await params;
 
-  const property = await getPropertyById(id);
+  const property = await getPropertyWithRooms(id);
 
   if (!property) {
     notFound();
@@ -41,9 +41,9 @@ export default async function PropertyDetailPage({
         </Link>
       </div>
 
+      {/* Property Information */}
       <div className="rounded-xl bg-white p-6 shadow">
         <div className="grid grid-cols-2 gap-6">
-
           <div>
             <p className="text-sm text-slate-500">
               Property Type
@@ -103,8 +103,91 @@ export default async function PropertyDetailPage({
               {property.agreementEnd.toLocaleDateString()}
             </p>
           </div>
-
         </div>
+      </div>
+
+      {/* Room List */}
+      <div className="rounded-xl bg-white p-6 shadow">
+        <h2 className="mb-4 text-xl font-bold">
+          Rooms
+        </h2>
+
+        {property.rooms.length === 0 ? (
+          <p className="text-slate-500">
+            No rooms available.
+          </p>
+        ) : (
+          <table className="w-full">
+            <tbody>
+  {property.rooms.map((room) => (
+    <tr
+      key={room.id}
+      className="border-b last:border-0"
+    >
+      <td className="py-3">
+        {room.roomNumber}
+      </td>
+
+      <td className="py-3">
+        {room.floor ?? "-"}
+      </td>
+
+      <td className="py-3">
+        RM {room.monthlyRent.toFixed(2)}
+      </td>
+
+      <td className="py-3">
+        {room.status}
+      </td>
+
+      <td className="py-3">
+        <div className="flex justify-center gap-2">
+          <Link
+            href={`/property/${property.id}/room/${room.id}`}
+            className="rounded bg-yellow-500 px-3 py-1 text-white"
+          >
+            Edit
+          </Link>
+
+          <form>
+            <button
+              className="rounded bg-red-600 px-3 py-1 text-white"
+            >
+              Delete
+            </button>
+          </form>
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
+            <tbody>
+              {property.rooms.map((room) => (
+                <tr
+                  key={room.id}
+                  className="border-b last:border-0"
+                >
+                  <td className="py-3">
+                    {room.roomNumber}
+                  </td>
+
+                  <td className="py-3">
+                    {room.floor ?? "-"}
+                  </td>
+
+                  <td className="py-3">
+                    RM {room.monthlyRent.toFixed(2)}
+                  </td>
+
+                  <td className="py-3">
+                    {room.status}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
