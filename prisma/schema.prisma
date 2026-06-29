@@ -36,6 +36,26 @@ model Room {
 
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+tenant Tenant?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Tenant {
+  id String @id @default(cuid())
+
+  fullName String
+  phone String
+  email String?
+
+  icPassport String
+
+  checkInDate DateTime
+  checkOutDate DateTime?
+
+  status String
+
+  roomId String @unique
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

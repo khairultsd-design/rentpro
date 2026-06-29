@@ -70,7 +70,7 @@ export default function RoomTable({
                 </Link>
 
             <DeleteRoomButton roomId={room.id} />
-<p className="text-red-500 text-xs">TEST BUTTON</p>
+
               </div>
             </td>
           </tr>
