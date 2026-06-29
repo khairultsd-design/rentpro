@@ -1,6 +1,8 @@
-export interface Property {
-  id: string;
+import type { Property } from "@prisma/client";
 
+export type { Property };
+
+export interface CreatePropertyDto {
   name: string;
   type: string;
   address: string;
@@ -12,7 +14,4 @@ export interface Property {
   availableRooms: number;
 
   status: string;
-
-  createdAt: Date;
-  updatedAt: Date;
 }

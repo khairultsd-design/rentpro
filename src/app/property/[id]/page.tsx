@@ -1,3 +1,4 @@
+import RoomTable from "@/features/room/components/RoomTable";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -112,82 +113,10 @@ export default async function PropertyDetailPage({
           Rooms
         </h2>
 
-        {property.rooms.length === 0 ? (
-          <p className="text-slate-500">
-            No rooms available.
-          </p>
-        ) : (
-          <table className="w-full">
-            <tbody>
-  {property.rooms.map((room) => (
-    <tr
-      key={room.id}
-      className="border-b last:border-0"
-    >
-      <td className="py-3">
-        {room.roomNumber}
-      </td>
-
-      <td className="py-3">
-        {room.floor ?? "-"}
-      </td>
-
-      <td className="py-3">
-        RM {room.monthlyRent.toFixed(2)}
-      </td>
-
-      <td className="py-3">
-        {room.status}
-      </td>
-
-      <td className="py-3">
-        <div className="flex justify-center gap-2">
-          <Link
-            href={`/property/${property.id}/room/${room.id}`}
-            className="rounded bg-yellow-500 px-3 py-1 text-white"
-          >
-            Edit
-          </Link>
-
-          <form>
-            <button
-              className="rounded bg-red-600 px-3 py-1 text-white"
-            >
-              Delete
-            </button>
-          </form>
-        </div>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
-            <tbody>
-              {property.rooms.map((room) => (
-                <tr
-                  key={room.id}
-                  className="border-b last:border-0"
-                >
-                  <td className="py-3">
-                    {room.roomNumber}
-                  </td>
-
-                  <td className="py-3">
-                    {room.floor ?? "-"}
-                  </td>
-
-                  <td className="py-3">
-                    RM {room.monthlyRent.toFixed(2)}
-                  </td>
-
-                  <td className="py-3">
-                    {room.status}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+       <RoomTable
+  propertyId={property.id}
+  rooms={property.rooms}
+/>
       </div>
     </div>
   );
