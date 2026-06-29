@@ -1,13 +1,10 @@
 import Link from "next/link";
+
 import PropertyTable from "@/features/property/components/PropertyTable";
-import { prisma } from "@/lib/prisma";
+import { getProperties } from "@/features/property/services/property.service";
 
 export default async function PropertyPage() {
-  const properties = await prisma.property.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const properties = await getProperties();
 
   return (
     <>

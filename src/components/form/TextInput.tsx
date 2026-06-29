@@ -1,6 +1,6 @@
 type TextInputProps = {
-  label: string;
   name: string;
+  label: string;
   placeholder?: string;
   type?: string;
   defaultValue?: string | number;
@@ -8,8 +8,8 @@ type TextInputProps = {
 };
 
 export default function TextInput({
-  label,
   name,
+  label,
   placeholder,
   type = "text",
   defaultValue,
