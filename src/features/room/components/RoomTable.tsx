@@ -62,16 +62,24 @@ export default function RoomTable({
 
             <td className="py-3">
               <div className="flex justify-center gap-2">
-                <Link
-                  href={`/property/${propertyId}/room/${room.id}`}
-                  className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-                >
-                  Edit
-                </Link>
+  <Link
+    href={`/property/${propertyId}/room/${room.id}`}
+    className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
+  >
+    Edit
+  </Link>
 
-            <DeleteRoomButton roomId={room.id} />
+{room.status === "AVAILABLE" && (
+    <Link
+      href={`/property/${propertyId}/room/${room.id}/tenant/new`}
+      className="rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700"
+    >
+      + Tenant
+    </Link>
+  )}
 
-              </div>
+  <DeleteRoomButton roomId={room.id} />
+</div>
             </td>
           </tr>
         ))}

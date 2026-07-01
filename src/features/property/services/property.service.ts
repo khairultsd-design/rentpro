@@ -37,3 +37,35 @@ export async function createProperty(data: CreatePropertyDto) {
     data,
   });
 }
+
+export async function updateProperty(
+  id: string,
+  data: CreatePropertyDto
+) {
+  return prisma.property.update({
+    where: {
+      id,
+    },
+    data,
+  });
+}
+
+export async function deleteProperty(id: string) {
+  const roomCount = await prisma.room.count({
+    where: {
+      propertyId: id,
+    },
+  });
+
+  if (roomCount > 0) {
+    throw new Error(
+      "This property still contains rooms. Delete all rooms first."
+    );
+  }
+
+  return prisma.property.delete({
+    where: {
+      id,
+    },
+  });
+}

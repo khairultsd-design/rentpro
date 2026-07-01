@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { RoomStatus } from "@prisma/client";
 
 export async function createRoom(data: {
   roomNumber: string;
@@ -7,8 +8,26 @@ export async function createRoom(data: {
   status: string;
   propertyId: string;
 }) {
-  return prisma.room.create({
-    data,
+  return prisma.$transaction(async (tx) => {
+    const room = await tx.room.create({
+      data,
+    });
+
+    await tx.property.update({
+      where: {
+        id: data.propertyId,
+      },
+      data: {
+        totalRooms: {
+          increment: 1,
+        },
+availableRooms: {
+  increment: data.status === "AVAILABLE" ? 1 : 0,
+},
+      },
+    });
+
+    return room;
   });
 }
 
@@ -66,7 +85,7 @@ export async function deleteRoom(id: string) {
         decrement: 1,
       },
       availableRooms: {
-        decrement: room.status === "Available" ? 1 : 0,
+        decrement: room.status === "AVAILABLE" ? 1 : 0,
       },
     },
   });

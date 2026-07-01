@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+
 
 import TextInput from "@/components/form/TextInput";
 import { createTenant } from "@/features/tenant/actions/tenant.actions";
@@ -32,7 +32,7 @@ export default async function NewTenantPage({
       roomId,
     });
 
-    redirect(`/property/${id}`);
+
   }
 
   return (

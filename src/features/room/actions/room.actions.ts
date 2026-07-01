@@ -22,7 +22,7 @@ export async function createRoom(data: CreateRoomInput) {
     roomNumber: data.roomNumber,
     floor: data.floor,
     monthlyRent: data.monthlyRent,
-    status: "Available",
+status: "AVAILABLE",
   });
 
   revalidatePath(`/property/${data.propertyId}`);

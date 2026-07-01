@@ -1,5 +1,6 @@
 "use server";
 
+import { TenantStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -21,11 +22,18 @@ export async function createTenant(
   propertyId: string,
   data: CreateTenantInput
 ) {
-  await createTenantService({
-    ...data,
-    status: "Active",
-  });
+  console.log("DEBUG STATUS:", TenantStatus.ACTIVE);
 
-  revalidatePath(`/property/${propertyId}`);
-  redirect(`/property/${propertyId}`);
+  try {
+    await createTenantService({
+      ...data,
+      status: TenantStatus.ACTIVE,
+    });
+
+    revalidatePath(`/property/${propertyId}`);
+    redirect(`/property/${propertyId}`);
+  } catch (error) {
+    console.error("TENANT ERROR:", error);
+    throw error;
+  }
 }
