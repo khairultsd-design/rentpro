@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 import {
   createTenant as createTenantService,
+  updateTenant as updateTenantService,
 } from "../services/tenant.service";
 
 type CreateTenantInput = {
@@ -22,18 +23,30 @@ export async function createTenant(
   propertyId: string,
   data: CreateTenantInput
 ) {
-  console.log("DEBUG STATUS:", TenantStatus.ACTIVE);
+  await createTenantService({
+    ...data,
+    status: TenantStatus.ACTIVE,
+  });
 
-  try {
-    await createTenantService({
-      ...data,
-      status: TenantStatus.ACTIVE,
-    });
-
-    revalidatePath(`/property/${propertyId}`);
-    redirect(`/property/${propertyId}`);
-  } catch (error) {
-    console.error("TENANT ERROR:", error);
-    throw error;
+  revalidatePath(`/property/${propertyId}`);
+  redirect(`/property/${propertyId}`);
+}
+export async function updateTenant(
+  tenantId: string,
+  propertyId: string,
+  data: {
+    fullName: string;
+    phone: string;
+    email?: string;
+    icPassport: string;
+    checkInDate: Date;
   }
+) {
+  await updateTenantService(tenantId, {
+    ...data,
+    status: TenantStatus.ACTIVE,
+  });
+
+  revalidatePath(`/property/${propertyId}`);
+  redirect(`/property/${propertyId}`);
 }

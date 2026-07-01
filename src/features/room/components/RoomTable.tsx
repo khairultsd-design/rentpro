@@ -70,15 +70,24 @@ export default function RoomTable({
   </Link>
 
 {room.status === "AVAILABLE" && (
-    <Link
-      href={`/property/${propertyId}/room/${room.id}/tenant/new`}
-      className="rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700"
-    >
-      + Tenant
-    </Link>
-  )}
+  <Link
+    href={`/property/${propertyId}/room/${room.id}/tenant/new`}
+    className="rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700"
+  >
+    + Tenant
+  </Link>
+)}
 
-  <DeleteRoomButton roomId={room.id} />
+{room.status === "OCCUPIED" && (
+  <Link
+    href={`/property/${propertyId}/room/${room.id}/tenant`}
+    className="rounded bg-indigo-600 px-3 py-1 text-white hover:bg-indigo-700"
+  >
+    👤 Tenant
+  </Link>
+)}
+
+<DeleteRoomButton roomId={room.id} />
 </div>
             </td>
           </tr>
