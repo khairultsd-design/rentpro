@@ -36,7 +36,6 @@ export async function createTenancy(data: CreateTenancyInput) {
     }
     console.log("CreateTenancy Data:", data);
 console.log("Room ID:", data.roomId);
-
 const activeTenancy = await tx.tenancy.findFirst({
   where: {
     tenantId: data.tenantId,
@@ -88,5 +87,96 @@ if (activeTenancy) {
     });
 
     return tenancy;
+  });
+}
+
+export async function getTenancies() {
+  return prisma.tenancy.findMany({
+    include: {
+      tenant: true,
+      room: {
+        include: {
+          property: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
+export async function getTenancyById(id: string) {
+  return prisma.tenancy.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      tenant: true,
+      room: {
+        include: {
+          property: true,
+        },
+      },
+    },
+  });
+}
+
+export async function checkOutTenancy(id: string) {
+  return prisma.$transaction(async (tx) => {
+    const tenancy = await tx.tenancy.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        room: true,
+      },
+    });
+
+    if (!tenancy) {
+      throw new Error("Tenancy not found.");
+    }
+
+    if (tenancy.status !== TenancyStatus.ACTIVE) {
+      throw new Error("Tenancy is not active.");
+    }
+
+    await tx.tenancy.update({
+      where: {
+        id,
+      },
+      data: {
+        status: TenancyStatus.COMPLETED,
+      },
+    });
+
+    await tx.room.update({
+      where: {
+        id: tenancy.roomId,
+      },
+      data: {
+        status: RoomStatus.AVAILABLE,
+      },
+    });
+
+    await tx.tenant.update({
+      where: {
+        id: tenancy.tenantId,
+      },
+      data: {
+        status: TenantStatus.CHECKED_OUT,
+      },
+    });
+
+    await tx.property.update({
+      where: {
+        id: tenancy.room.propertyId,
+      },
+      data: {
+        availableRooms: {
+          increment: 1,
+        },
+      },
+    });
   });
 }

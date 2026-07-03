@@ -3,7 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { createTenancy } from "../services/tenancy.service";
+import {
+  createTenancy,
+  checkOutTenancy,
+} from "../services/tenancy.service";
 
 export async function checkInTenant(
   propertyId: string,
@@ -27,4 +30,17 @@ console.log("All form entries =", Object.fromEntries(formData.entries()));
 
   revalidatePath(`/property/${propertyId}`);
   redirect(`/property/${propertyId}`);
+}
+
+export async function checkOutTenant(
+  propertyId: string,
+  tenancyId: string
+) {
+  await checkOutTenancy(tenancyId);
+
+  revalidatePath("/dashboard/tenancies");
+  revalidatePath(`/dashboard/tenancies/${tenancyId}`);
+  revalidatePath(`/property/${propertyId}`);
+
+  redirect("/dashboard/tenancies");
 }
