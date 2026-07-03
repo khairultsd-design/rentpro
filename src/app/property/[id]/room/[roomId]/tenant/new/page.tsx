@@ -13,24 +13,18 @@ type PageProps = {
 export default async function NewTenantPage({
   params,
 }: PageProps) {
-  const { id, roomId } = await params;
+  const { id } = await params;
 
   async function saveTenant(formData: FormData) {
     "use server";
 
-    await createTenant(id, {
-      fullName: formData.get("fullName") as string,
-      phone: formData.get("phone") as string,
-      email:
-        (formData.get("email") as string) || undefined,
-      icPassport: formData.get(
-        "icPassport"
-      ) as string,
-      checkInDate: new Date(
-        formData.get("checkInDate") as string
-      ),
-      roomId,
-    });
+await createTenant(id, {
+  fullName: formData.get("fullName") as string,
+  phone: formData.get("phone") as string,
+  email:
+    (formData.get("email") as string) || undefined,
+  icPassport: formData.get("icPassport") as string,
+});
 
 
   }
@@ -66,11 +60,7 @@ export default async function NewTenantPage({
           label="IC / Passport"
         />
 
-        <TextInput
-          name="checkInDate"
-          label="Check In Date"
-          type="date"
-        />
+
 
         <button
           type="submit"

@@ -10,7 +10,7 @@ export interface Tenant {
   checkInDate: Date;
   checkOutDate?: Date;
 
-  status: "Active" | "Checked Out";
+  status: "ACTIVE" | "Checked Out";
 
   roomId: string;
 }

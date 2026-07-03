@@ -1,6 +1,5 @@
 "use server";
 
-import { TenantStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -14,23 +13,23 @@ type CreateTenantInput = {
   phone: string;
   email?: string;
   icPassport: string;
-  checkInDate: Date;
-  checkOutDate?: Date;
-  roomId: string;
+  nationality?: string;
+  gender?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
 };
 
 export async function createTenant(
   propertyId: string,
   data: CreateTenantInput
 ) {
-  await createTenantService({
-    ...data,
-    status: TenantStatus.ACTIVE,
-  });
+  const tenant = await createTenantService(data);
 
   revalidatePath(`/property/${propertyId}`);
-  redirect(`/property/${propertyId}`);
+
+  redirect(`/property/${propertyId}/tenant/${tenant.id}`);
 }
+
 export async function updateTenant(
   tenantId: string,
   propertyId: string,
@@ -39,14 +38,15 @@ export async function updateTenant(
     phone: string;
     email?: string;
     icPassport: string;
-    checkInDate: Date;
+    nationality?: string;
+    gender?: string;
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
   }
 ) {
-  await updateTenantService(tenantId, {
-    ...data,
-    status: TenantStatus.ACTIVE,
-  });
+  await updateTenantService(tenantId, data);
 
   revalidatePath(`/property/${propertyId}`);
+
   redirect(`/property/${propertyId}`);
 }

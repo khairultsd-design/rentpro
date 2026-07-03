@@ -14,69 +14,94 @@ enum RoomStatus {
 }
 
 enum TenantStatus {
+  PENDING
   ACTIVE
   CHECKED_OUT
 }
 
+enum TenancyStatus {
+  ACTIVE
+  COMPLETED
+  TERMINATED
+}
+
 model Property {
-  id              String   @id @default(cuid())
-  name            String
-  type            String
-  address         String
+  id      String @id @default(cuid())
+  name    String
+  type    String
+  address String
 
-  agreementStart  DateTime
-  agreementEnd    DateTime
+  agreementStart DateTime
+  agreementEnd   DateTime
 
-  totalRooms      Int
-  availableRooms  Int
+  totalRooms     Int
+  availableRooms Int
 
-  status          String
+  status String
 
-  rooms           Room[]
+  rooms Room[]
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Room {
-  id              String      @id @default(cuid())
-  roomNumber      String
-  floor           String?
-  monthlyRent     Float
-  status          RoomStatus
+  id          String     @id @default(cuid())
+  roomNumber  String
+  floor       String?
+  monthlyRent Float
+  status      RoomStatus
 
-  propertyId      String
-  property        Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  tenant          Tenant?
-
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tenancies Tenancy[]
 }
 
 model Tenant {
-  id                      String        @id @default(cuid())
+  id String @id @default(cuid())
 
-  fullName                String
-  phone                   String
-  email                   String?
+  fullName String
+  phone    String
+  email    String?
 
-  icPassport              String
+  icPassport String
 
-  nationality             String?
-  gender                  String?
+  nationality String?
+  gender      String?
 
-  emergencyContactName    String?
-  emergencyContactPhone   String?
+  emergencyContactName  String?
+  emergencyContactPhone String?
 
-  checkInDate             DateTime
-  checkOutDate            DateTime?
+  status TenantStatus @default(PENDING)
 
-  status                  TenantStatus
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  roomId                  String @unique
-  room                    Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  tenancies Tenancy[]
+}
 
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+model Tenancy {
+  id String @id @default(cuid())
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+
+  moveInDate  DateTime
+  moveOutDate DateTime?
+
+  monthlyRental Float
+
+  securityDeposit Float
+  utilityDeposit  Float
+
+  status TenancyStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -9,7 +9,7 @@ export default function StatusBadge({
   let textColor = "";
 
   switch (status) {
-    case "Active":
+    case "ACTIVE":
       bgColor = "bg-green-100";
       textColor = "text-green-700";
       break;

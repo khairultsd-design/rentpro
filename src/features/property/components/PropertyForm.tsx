@@ -100,7 +100,7 @@ export default function PropertyForm({
     defaultValue={property?.status}
     className="w-full rounded-lg border p-3"
   >
-    <option>Active</option>
+    <option>ACTIVE</option>
     <option>Expiring Soon</option>
     <option>Expired</option>
   </select>

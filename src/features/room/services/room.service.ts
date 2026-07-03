@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { RoomStatus } from "@prisma/client";
 
+
 export async function createRoom(data: {
   roomNumber: string;
   floor?: string;
   monthlyRent: number;
-  status: string;
+status: RoomStatus;
   propertyId: string;
 }) {
   return prisma.$transaction(async (tx) => {
@@ -91,4 +92,15 @@ export async function deleteRoom(id: string) {
   });
 
   return room.propertyId;
+}
+export async function getAvailableRooms(propertyId: string) {
+  return prisma.room.findMany({
+    where: {
+      propertyId,
+      status: RoomStatus.AVAILABLE,
+    },
+    orderBy: {
+      roomNumber: "asc",
+    },
+  });
 }

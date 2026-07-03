@@ -6,7 +6,7 @@ export interface Room {
 
   monthlyRent: number;
 
-  status: "Available" | "Occupied" | "Maintenance";
+  status: "AVAILABLE" | "OCCUPIED" | "MAINTENANCE";
 
   propertyId: string;
 }

@@ -1,0 +1,30 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+import { createTenancy } from "../services/tenancy.service";
+
+export async function checkInTenant(
+  propertyId: string,
+  tenantId: string,
+  formData: FormData
+) {
+  console.log("roomId =", formData.get("roomId"));
+console.log("moveInDate =", formData.get("moveInDate"));
+console.log("All form entries =", Object.fromEntries(formData.entries()));
+  await createTenancy({
+    tenantId,
+    roomId: formData.get("roomId") as string,
+    moveInDate: new Date(formData.get("moveInDate") as string),
+    moveOutDate: formData.get("moveOutDate")
+      ? new Date(formData.get("moveOutDate") as string)
+      : undefined,
+    monthlyRental: Number(formData.get("monthlyRental")),
+    securityDeposit: Number(formData.get("securityDeposit")),
+    utilityDeposit: Number(formData.get("utilityDeposit")),
+  });
+
+  revalidatePath(`/property/${propertyId}`);
+  redirect(`/property/${propertyId}`);
+}
