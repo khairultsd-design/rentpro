@@ -1,3 +1,4 @@
+import { createInvoice } from "@/features/invoice/services/invoice.service";
 import { prisma } from "@/lib/prisma";
 import {
   RoomStatus,
@@ -85,6 +86,17 @@ if (activeTenancy) {
         },
       },
     });
+
+/*
+await createInvoice({
+  tenancyId: tenancy.id,
+  billingMonth: data.moveInDate.getMonth() + 1,
+  billingYear: data.moveInDate.getFullYear(),
+  amount: data.monthlyRental,
+  dueDate: data.moveInDate,
+  remarks: "First month rental",
+});
+*/
 
     return tenancy;
   });

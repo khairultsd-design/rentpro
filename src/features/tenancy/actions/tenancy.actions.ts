@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createInvoice } from "@/features/invoice/services/invoice.service";
 
 import {
   createTenancy,
@@ -16,7 +17,8 @@ export async function checkInTenant(
   console.log("roomId =", formData.get("roomId"));
 console.log("moveInDate =", formData.get("moveInDate"));
 console.log("All form entries =", Object.fromEntries(formData.entries()));
-  await createTenancy({
+  
+const tenancy = await createTenancy({
     tenantId,
     roomId: formData.get("roomId") as string,
     moveInDate: new Date(formData.get("moveInDate") as string),
@@ -28,6 +30,15 @@ console.log("All form entries =", Object.fromEntries(formData.entries()));
     utilityDeposit: Number(formData.get("utilityDeposit")),
   });
 
+  await createInvoice({
+  tenancyId: tenancy.id,
+  billingMonth: new Date(formData.get("moveInDate") as string).getMonth() + 1,
+  billingYear: new Date(formData.get("moveInDate") as string).getFullYear(),
+  amount: Number(formData.get("monthlyRental")),
+  dueDate: new Date(formData.get("moveInDate") as string),
+  remarks: "First month rental",
+});
+console.log("Invoice created successfully");
   revalidatePath(`/property/${propertyId}`);
   redirect(`/property/${propertyId}`);
 }
