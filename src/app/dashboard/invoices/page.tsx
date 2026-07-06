@@ -1,4 +1,5 @@
 import { getInvoices } from "@/features/invoice/services/invoice.service";
+import InvoiceTable from "@/features/invoice/components/InvoiceTable";
 
 export default async function InvoicesPage() {
   const invoices = await getInvoices();
@@ -9,9 +10,7 @@ export default async function InvoicesPage() {
         Invoices
       </h1>
 
-      <pre className="rounded bg-gray-100 p-4 text-sm overflow-auto">
-        {JSON.stringify(invoices, null, 2)}
-      </pre>
+      <InvoiceTable invoices={invoices} />
     </div>
   );
 }

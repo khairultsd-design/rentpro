@@ -16,7 +16,7 @@ export default function SelectInput({
   defaultValue,
   required = true,
 }: SelectInputProps) {
-  console.log("SelectInput =", SelectInput);
+  
   return (
     <div className="mb-6">
       <label className="block font-semibold mb-2">
