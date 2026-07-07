@@ -36,13 +36,20 @@ export default function Sidebar() {
         </li>
 
         <li>
-          <Link href="/report">📊 Reports</Link>
+          <span className="cursor-not-allowed text-gray-400">
+  📊 Reports (Coming Soon)
+</span>
+
+          <span className="cursor-not-allowed text-gray-400">
+  ⚙️ Settings (Coming Soon)
+  </span>
         </li>
 
-        <li>
-          <Link href="/settings">⚙️ Settings</Link>
-        </li>
-
+<li>
+  <Link href="/expense">
+    💸 Expenses
+  </Link>
+</li>
       </ul>
     </aside>
   );

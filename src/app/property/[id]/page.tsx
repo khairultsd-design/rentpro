@@ -1,6 +1,7 @@
 import RoomTable from "@/features/room/components/RoomTable";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
 
 import { getPropertyWithRooms } from "@/features/property/services/property.service";
 
@@ -23,33 +24,27 @@ export default async function PropertyDetailPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">
-            {property.name}
-          </h1>
+      <PageHeader
+  title={property.name}
+  description={property.address}
+  actions={
+    <div className="flex gap-3">
+      <Link
+        href={`/property/${property.id}/edit`}
+        className="rounded-lg bg-amber-500 px-5 py-3 text-white hover:bg-amber-600"
+      >
+        ✏️ Edit Property
+      </Link>
 
-          <p className="text-slate-500 mt-2">
-            {property.address}
-          </p>
-        </div>
-
-       <div className="flex gap-3">
-  <Link
-    href={`/property/${property.id}/edit`}
-    className="rounded-lg bg-amber-500 px-5 py-3 text-white hover:bg-amber-600"
-  >
-    ✏️ Edit Property
-  </Link>
-
-  <Link
-    href={`/property/${property.id}/room/new`}
-    className="rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
-  >
-    + Add Room
-  </Link>
-</div>
-      </div>
+      <Link
+        href={`/property/${property.id}/room/new`}
+        className="rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
+      >
+        + Add Room
+      </Link>
+    </div>
+  }
+/>
 
       {/* Property Information */}
       <div className="rounded-xl bg-white p-6 shadow">

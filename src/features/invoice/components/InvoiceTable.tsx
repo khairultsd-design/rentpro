@@ -1,8 +1,9 @@
 import Link from "next/link";
 import StatusBadge from "@/components/StatusBadge";
+import { InvoiceWithRelations } from "../types/invoice.types";
 
 type InvoiceTableProps = {
-  invoices: any[];
+  invoices: InvoiceWithRelations[];
 };
 
 export default function InvoiceTable({
@@ -51,11 +52,11 @@ export default function InvoiceTable({
               </td>
 
          <td className="p-4 text-center">
-  <StatusBadge status={invoice.status as any} />
+  {new Date(invoice.dueDate).toLocaleDateString()}
 </td>
 
               <td className="p-4 text-center">
-  {invoice.status}
+  <StatusBadge status={invoice.status} />
 </td>
 
               <td className="p-4">

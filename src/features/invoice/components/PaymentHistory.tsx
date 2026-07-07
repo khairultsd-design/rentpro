@@ -1,7 +1,13 @@
 import Link from "next/link";
+import { PaymentWithInvoice } from "../types/invoice.types";
+import {
+  formatCurrency,
+  formatDate,
+} from "@/lib/format";
+import EmptyState from "@/components/EmptyState";
 
 type PaymentHistoryProps = {
-  payments: any[];
+  payments: PaymentWithInvoice[];
 };
 
 export default function PaymentHistory({
@@ -16,9 +22,7 @@ export default function PaymentHistory({
       </div>
 
       {payments.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 p-8 text-center text-gray-500">
-          No payment recorded.
-        </div>
+        <EmptyState message="No payment recorded." />
       ) : (
         <table className="w-full">
           <thead className="border-b">
@@ -56,13 +60,11 @@ export default function PaymentHistory({
                 </td>
 
                 <td className="p-3">
-                  {new Date(
-                    payment.paymentDate
-                  ).toLocaleDateString()}
+                  {formatDate(payment.paymentDate)}
                 </td>
 
                 <td className="p-3 text-right font-semibold">
-                  RM {payment.amount.toFixed(2)}
+                  {formatCurrency(payment.amount)}
                 </td>
 
                 <td className="p-3 text-center">

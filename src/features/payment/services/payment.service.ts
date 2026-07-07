@@ -119,3 +119,26 @@ export async function getPaymentById(id: string) {
     },
   });
 }
+export async function getPayments() {
+  return prisma.payment.findMany({
+    include: {
+      invoice: {
+        include: {
+          tenancy: {
+            include: {
+              tenant: true,
+              room: {
+                include: {
+                  property: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      paymentDate: "desc",
+    },
+  });
+}
