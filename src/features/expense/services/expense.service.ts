@@ -39,3 +39,30 @@ export async function getExpenseById(id: string) {
     },
   });
 }
+
+export async function deleteExpense(id: string) {
+  return prisma.expense.delete({
+    where: { id },
+  });
+}
+
+type UpdateExpenseInput = {
+  propertyId: string;
+  title: string;
+  category: ExpenseCategory;
+  amount: number;
+  expenseDate: Date;
+  remarks?: string;
+};
+
+export async function updateExpense(
+  id: string,
+  data: UpdateExpenseInput
+) {
+  return prisma.expense.update({
+    where: {
+      id,
+    },
+    data,
+  });
+}

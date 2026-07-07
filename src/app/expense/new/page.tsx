@@ -1,4 +1,5 @@
 import { getProperties } from "@/features/property/services/property.service";
+import { createExpense } from "@/features/expense/actions/expense.actions";
 import ExpenseForm from "@/features/expense/components/ExpenseForm";
 
 export default async function NewExpensePage() {
@@ -10,7 +11,10 @@ export default async function NewExpensePage() {
         Add Expense
       </h1>
 
-      <ExpenseForm properties={properties} />
+      <ExpenseForm
+        properties={properties}
+        action={createExpense}
+      />
     </div>
   );
 }

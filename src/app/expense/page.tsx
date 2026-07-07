@@ -2,6 +2,8 @@ import Link from "next/link";
 import { formatCurrency, formatDate } from "@/lib/format";
 import PageHeader from "@/components/PageHeader";
 import EmptyState from "@/components/EmptyState";
+import DeleteExpenseButton from "@/features/expense/components/DeleteExpenseButton";
+
 
 import { getExpenses } from "@/features/expense/services/expense.service";
 
@@ -35,6 +37,7 @@ export default async function ExpensePage() {
                 <th className="p-4 text-center">Category</th>
                 <th className="p-4 text-right">Amount</th>
                 <th className="p-4 text-center">Date</th>
+                <th className="p-4 text-center">Action</th>
               </tr>
             </thead>
 
@@ -63,6 +66,18 @@ export default async function ExpensePage() {
                   <td className="p-4 text-center">
                     {formatDate(expense.expenseDate)}
                   </td>
+                 <td className="p-4">
+  <div className="flex items-center justify-center gap-3">
+    <Link
+      href={`/expense/${expense.id}/edit`}
+      className="text-blue-600 hover:underline"
+    >
+      Edit
+    </Link>
+
+    <DeleteExpenseButton id={expense.id} />
+  </div>
+</td>
                 </tr>
               ))}
             </tbody>

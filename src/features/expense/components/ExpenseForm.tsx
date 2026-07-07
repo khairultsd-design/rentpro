@@ -1,7 +1,4 @@
 import { ExpenseCategory } from "@prisma/client";
-
-import { createExpense } from "../actions/expense.actions";
-
 import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
 
@@ -10,38 +7,51 @@ type ExpenseFormProps = {
     id: string;
     name: string;
   }[];
+  action: (formData: FormData) => void | Promise<void>;
+  defaultValues?: {
+    propertyId: string;
+    title: string;
+    category: ExpenseCategory;
+    amount: number;
+    expenseDate: string;
+    remarks: string;
+  };
+  submitLabel?: string;
 };
 
 export default function ExpenseForm({
   properties,
+  action,
+  defaultValues,
+  submitLabel = "Save Expense",
 }: ExpenseFormProps) {
   return (
     <>
-      <h2 className="text-red-600 text-2xl">
-        Expense Form Loaded
-      </h2>
-
-      <form action={createExpense} className="space-y-6">
+    
+      <form action={action} className="space-y-6">
       <SelectInput
-        name="propertyId"
-        label="Property"
-        required
-        options={properties.map((property) => ({
-          value: property.id,
-          label: property.name,
-        }))}
-      />
+  name="propertyId"
+  label="Property"
+  required
+  defaultValue={defaultValues?.propertyId}
+  options={properties.map((property) => ({
+    value: property.id,
+    label: property.name,
+  }))}
+/>
 
       <TextInput
         name="title"
         label="Expense Title"
         required
+        defaultValue={defaultValues?.title}
       />
 
       <SelectInput
         name="category"
         label="Category"
         required
+        defaultValue={defaultValues?.category}
         options={Object.values(ExpenseCategory).map(
           (category) => ({
             value: category,
@@ -51,29 +61,32 @@ export default function ExpenseForm({
       />
 
       <TextInput
-        name="amount"
-        label="Amount"
-        type="number"
-        required
-      />
+  name="amount"
+  label="Amount"
+  type="number"
+  required
+  defaultValue={defaultValues?.amount}
+/>
 
       <TextInput
         name="expenseDate"
         label="Expense Date"
         type="date"
         required
+        defaultValue={defaultValues?.expenseDate}
       />
 
       <TextInput
         name="remarks"
         label="Remarks"
+        defaultValue={defaultValues?.remarks}
       />
 
       <button
         type="submit"
         className="rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
       >
-        Save Expense
+        {submitLabel}
       </button>
       </form>
     </>
