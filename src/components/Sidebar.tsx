@@ -25,6 +25,12 @@ export default function Sidebar() {
           <Link href="/tenant">👤 Tenants</Link>
         </li>
 
+<li>
+  <Link href="/dashboard/invoices">
+    📄 Invoices
+  </Link>
+</li>
+
         <li>
           <Link href="/payment">💰 Payments</Link>
         </li>

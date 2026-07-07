@@ -89,6 +89,7 @@ model Invoice {
 model Payment {
   id            String        @id @default(cuid())
   invoiceId     String
+  receiptNo     String?       @unique
   amount        Float
   paymentDate   DateTime
   paymentMethod PaymentMethod
