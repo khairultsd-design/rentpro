@@ -35,8 +35,7 @@ export async function createTenancy(data: CreateTenancyInput) {
     if (room.status !== RoomStatus.AVAILABLE) {
       throw new Error("Room is not available.");
     }
-    console.log("CreateTenancy Data:", data);
-console.log("Room ID:", data.roomId);
+    
 const activeTenancy = await tx.tenancy.findFirst({
   where: {
     tenantId: data.tenantId,
@@ -54,7 +53,7 @@ if (activeTenancy) {
         status: TenancyStatus.ACTIVE,
       },
     });
-
+    
     // Update room
     await tx.room.update({
       where: {
@@ -87,16 +86,19 @@ if (activeTenancy) {
       },
     });
 
-/*
-await createInvoice({
-  tenancyId: tenancy.id,
-  billingMonth: data.moveInDate.getMonth() + 1,
-  billingYear: data.moveInDate.getFullYear(),
-  amount: data.monthlyRental,
-  dueDate: data.moveInDate,
-  remarks: "First month rental",
-});
-*/
+
+await createInvoice(
+  {
+    tenancyId: tenancy.id,
+    billingMonth: data.moveInDate.getMonth() + 1,
+    billingYear: data.moveInDate.getFullYear(),
+    amount: data.monthlyRental,
+    dueDate: data.moveInDate,
+    remarks: "First month rental",
+  },
+  tx
+);
+
 
     return tenancy;
   });

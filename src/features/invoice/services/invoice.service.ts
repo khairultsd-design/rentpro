@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { InvoiceStatus } from "@prisma/client";
+import { Prisma, InvoiceStatus } from "@prisma/client";
 
 export async function generateInvoiceNumber() {
   const now = new Date();
@@ -9,7 +9,7 @@ export async function generateInvoiceNumber() {
 
   const prefix = `INV-${year}${month}`;
 
-  const latestInvoice = await prisma.invoice.findFirst({
+const latestInvoice = await prisma.invoice.findFirst({
     where: {
       invoiceNumber: {
         startsWith: prefix,
@@ -43,24 +43,27 @@ type CreateInvoiceInput = {
 };
 
 export async function createInvoice(
-  data: CreateInvoiceInput
+  data: CreateInvoiceInput,
+  db: Prisma.TransactionClient | typeof prisma = prisma
 ) {
-  console.log("CREATE INVOICE CALLED");
+  
 
   const invoiceNumber =
     await generateInvoiceNumber();
-
-  return prisma.invoice.create({
+    
+  return db.invoice.create({
     data: {
-      invoiceNumber,
-      tenancyId: data.tenancyId,
-      billingMonth: data.billingMonth,
-      billingYear: data.billingYear,
-      amount: data.amount,
-      dueDate: data.dueDate,
-      remarks: data.remarks,
-      status: InvoiceStatus.PENDING,
-    },
+  invoiceNumber,
+  tenancyId: data.tenancyId,
+  billingMonth: data.billingMonth,
+  billingYear: data.billingYear,
+  amount: data.amount,
+  paidAmount: 0,
+  balance: data.amount,
+  dueDate: data.dueDate,
+  remarks: data.remarks,
+  status: InvoiceStatus.PENDING,
+},
   });
 }
 
