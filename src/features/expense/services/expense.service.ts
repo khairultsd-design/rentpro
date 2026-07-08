@@ -18,11 +18,33 @@ export async function createExpense(
   });
 }
 
-export async function getExpenses() {
+export async function getExpenses(
+  search?: string
+) {
   return prisma.expense.findMany({
+    where: search
+      ? {
+          OR: [
+            {
+              title: {
+                contains: search,
+              },
+            },
+            {
+              property: {
+                name: {
+                  contains: search,
+                },
+              },
+            },
+          ],
+        }
+      : undefined,
+
     include: {
       property: true,
     },
+
     orderBy: {
       expenseDate: "desc",
     },

@@ -1,8 +1,27 @@
 import { prisma } from "@/lib/prisma";
 import type { CreatePropertyDto } from "../types/property";
 
-export async function getProperties() {
+export async function getProperties(
+  search?: string
+) {
   return prisma.property.findMany({
+    where: search
+      ? {
+          OR: [
+            {
+              name: {
+                contains: search,
+              },
+            },
+            {
+              address: {
+                contains: search,
+              },
+            },
+          ],
+        }
+      : undefined,
+
     orderBy: {
       createdAt: "desc",
     },

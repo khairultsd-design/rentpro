@@ -19,6 +19,38 @@ export async function createTenant(data: {
   });
 }
 
+export async function getTenants(
+  search?: string
+) {
+  return prisma.tenant.findMany({
+    where: search
+      ? {
+          OR: [
+            {
+              fullName: {
+                contains: search,
+              },
+            },
+            {
+              phone: {
+                contains: search,
+              },
+            },
+            {
+              icPassport: {
+                contains: search,
+              },
+            },
+          ],
+        }
+      : undefined,
+
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
 export async function getTenantById(id: string) {
   return prisma.tenant.findUnique({
     where: {
