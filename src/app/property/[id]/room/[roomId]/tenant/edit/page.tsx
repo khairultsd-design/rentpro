@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { updateTenant } from "@/features/tenant/actions/tenant.actions";
-import { getTenantByRoom } from "@/features/tenant/services/tenant.service";
+import { getTenantById } from "@/features/tenant/services/tenant.service";
 import TextInput from "@/components/form/TextInput";
 type PageProps = {
   params: Promise<{
@@ -14,7 +14,7 @@ export default async function EditTenantPage({
 }: PageProps) {
     const { id, roomId } = await params;
 
-  const tenant = await getTenantByRoom(roomId);
+  const tenant = await getTenantById(roomId);
 
   if (!tenant) {
     notFound();
@@ -33,9 +33,7 @@ async function save(formData: FormData) {
       icPassport: formData.get(
         "icPassport"
       ) as string,
-      checkInDate: new Date(
-        formData.get("checkInDate") as string
-      ),
+      // checkInDate is not part of the updatable tenant payload here
     }
   );
 }
@@ -68,13 +66,7 @@ async function save(formData: FormData) {
   name="icPassport"
   label="IC / Passport"
   defaultValue={tenant.icPassport}
-/><TextInput
-  name="checkInDate"
-  label="Check In Date"
-  type="date"
-  defaultValue={tenant.checkInDate
-    .toISOString()
-    .split("T")[0]}
+
 /><button
   type="submit"
   className="mt-6 rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
