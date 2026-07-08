@@ -1,6 +1,39 @@
 import { prisma } from "@/lib/prisma";
 import { InvoiceStatus, TenancyStatus } from "@prisma/client";
 
+export async function getRecentPayments() {
+  return prisma.payment.findMany({
+    orderBy: {
+      paymentDate: "desc",
+    },
+    take: 5,
+    include: {
+      invoice: {
+        include: {
+          tenancy: {
+            include: {
+              tenant: true,
+              room: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function getRecentExpenses() {
+  return prisma.expense.findMany({
+    orderBy: {
+      expenseDate: "desc",
+    },
+    take: 5,
+    include: {
+      property: true,
+    },
+  });
+}
+
 export async function getDashboardStats() {
   const [
     totalProperties,
@@ -81,26 +114,60 @@ export async function getDashboardStats() {
     totalRooms,
     availableRooms,
     occupiedRooms: totalRooms - availableRooms,
+    occupancyRate:
+  totalRooms === 0
+    ? 0
+    : Number(
+        (
+          ((totalRooms - availableRooms) /
+            totalRooms) *
+          100
+        ).toFixed(1)
+      ),
+      expenseRatio:
+  (totalCollection._sum.amount ?? 0) === 0
+    ? 0
+    : Number(
+        (
+          ((totalExpenses._sum.amount ?? 0) /
+            (totalCollection._sum.amount ?? 0)) *
+          100
+        ).toFixed(1)
+      ),
+      collectionRate:
+  ((totalCollection._sum.amount ?? 0) +
+    (outstandingInvoices._sum.balance ?? 0)) === 0
+    ? 0
+    : Number(
+        (
+          ((totalCollection._sum.amount ?? 0) /
+            (
+              (totalCollection._sum.amount ?? 0) +
+              (outstandingInvoices._sum.balance ?? 0)
+            )) *
+          100
+        ).toFixed(1)
+      ),
     activeTenants,
     activeTenancies,
-    outstanding:
-      outstandingInvoices._sum.balance ?? 0,
+    outstanding:outstandingInvoices._sum.balance ?? 0,
     collection:
       totalCollection._sum.amount ?? 0,
-    overdueInvoices,expenses:
-  totalExpenses._sum.amount ?? 0,
-  outstandingInvoices: outstandingInvoices._sum.balance ?? 0,
+    overdueInvoices,
+    
+    expenses:
+      totalExpenses._sum.amount ?? 0,
 
 profit:
   (totalCollection._sum.amount ?? 0) -
   (totalExpenses._sum.amount ?? 0),
   };
 }
-const outstandingInvoices =
-  await prisma.invoice.findMany({
+export async function getRecentOutstandingInvoices() {
+  return prisma.invoice.findMany({
     where: {
       status: {
-        not: "PAID",
+        not: InvoiceStatus.PAID,
       },
     },
     include: {
@@ -116,3 +183,24 @@ const outstandingInvoices =
     },
     take: 5,
   });
+}
+export async function getDashboardData() {
+  const [
+    stats,
+    recentPayments,
+    recentExpenses,
+    recentOutstandingInvoices,
+  ] = await Promise.all([
+    getDashboardStats(),
+    getRecentPayments(),
+    getRecentExpenses(),
+    getRecentOutstandingInvoices(),
+  ]);
+
+  return {
+    stats,
+    recentPayments,
+    recentExpenses,
+    recentOutstandingInvoices,
+  };
+}
