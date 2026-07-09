@@ -28,24 +28,6 @@ export default function Sidebar() {
 
         <li>
           <Link
-            href="/room"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            🚪 Rooms
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="/tenant"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            👤 Tenants
-          </Link>
-        </li>
-
-        <li>
-          <Link
             href="/dashboard/tenancies"
             className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
           >
