@@ -2,6 +2,7 @@ import { getDashboardData } from "@/features/dashboard/services/dashboard.servic
 import RecentPayments from "@/features/dashboard/components/RecentPayments";
 import OutstandingInvoices from "@/features/dashboard/components/OutstandingInvoices";
 import DashboardChart from "@/features/dashboard/components/DashboardChart";
+import GenerateInvoicesButton from "@/features/invoice/components/GenerateInvoicesButton";
 // Inline fallback component for RecentExpenses to avoid import errors
 function RecentExpenses({ expenses }: { expenses?: any[] }) {
   return (
@@ -99,6 +100,9 @@ const chartData = dashboard.chartData;
   title="Dashboard"
   description="Welcome to RentPro Management System"
 />
+<div className="flex justify-end">
+  <GenerateInvoicesButton />
+</div>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">

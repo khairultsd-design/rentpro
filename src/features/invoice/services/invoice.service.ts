@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma, InvoiceStatus } from "@prisma/client";
+import {
+  Prisma,
+  InvoiceStatus,
+  TenancyStatus,
+} from "@prisma/client";
 
 export async function generateInvoiceNumber() {
   const now = new Date();
@@ -46,10 +50,7 @@ export async function createInvoice(
   data: CreateInvoiceInput,
   db: Prisma.TransactionClient | typeof prisma = prisma
 ) {
-  
-
-  const invoiceNumber =
-    await generateInvoiceNumber();
+  const invoiceNumber = await generateInvoiceNumber();
     
   return db.invoice.create({
     data: {
@@ -65,6 +66,56 @@ export async function createInvoice(
   status: InvoiceStatus.PENDING,
 },
   });
+}
+
+export async function generateMonthlyInvoices() {
+  const now = new Date();
+
+  const billingMonth = now.getMonth() + 1;
+  const billingYear = now.getFullYear();
+
+  const dueDate = new Date(billingYear, billingMonth - 1, 7);
+
+  const activeTenancies = await prisma.tenancy.findMany({
+    where: {
+      status: TenancyStatus.ACTIVE,
+    },
+  });
+
+  let generated = 0;
+  let skipped = 0;
+
+  for (const tenancy of activeTenancies) {
+    const existingInvoice = await prisma.invoice.findFirst({
+      where: {
+        tenancyId: tenancy.id,
+        billingMonth,
+        billingYear,
+      },
+    });
+
+    if (existingInvoice) {
+      skipped++;
+      continue;
+    }
+
+    await createInvoice({
+      tenancyId: tenancy.id,
+      billingMonth,
+      billingYear,
+      amount: tenancy.monthlyRental,
+      dueDate,
+      remarks: `Monthly Rental ${billingMonth}/${billingYear}`,
+    });
+
+    generated++;
+  }
+
+  return {
+    generated,
+    skipped,
+    total: activeTenancies.length,
+  };
 }
 
 export async function getInvoices() {

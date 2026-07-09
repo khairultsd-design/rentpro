@@ -85,6 +85,8 @@ model Invoice {
   updatedAt     DateTime      @updatedAt
   tenancy       Tenancy       @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
   payments      Payment[]
+
+  @@unique([tenancyId, billingMonth, billingYear])
 }
 
 model Payment {
