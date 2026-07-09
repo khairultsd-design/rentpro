@@ -156,13 +156,14 @@ export async function checkOutTenancy(id: string) {
     }
 
     await tx.tenancy.update({
-      where: {
-        id,
-      },
-      data: {
-        status: TenancyStatus.COMPLETED,
-      },
-    });
+  where: {
+    id,
+  },
+  data: {
+    status: TenancyStatus.COMPLETED,
+    moveOutDate: new Date(),
+  },
+});
 
     await tx.room.update({
       where: {
