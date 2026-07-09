@@ -14,8 +14,9 @@ type Tenancy = {
     roomNumber: string;
 
     property: {
-      name: string;
-    };
+  id: string;
+  name: string;
+};
   };
 };
 

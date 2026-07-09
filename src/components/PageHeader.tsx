@@ -12,14 +12,14 @@ export default function PageHeader({
   actions,
 }: PageHeaderProps) {
   return (
-    <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+    <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-6">
       <div>
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
           {title}
         </h1>
 
         {description && (
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-sm text-slate-500">
             {description}
           </p>
         )}

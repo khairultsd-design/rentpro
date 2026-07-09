@@ -186,21 +186,77 @@ export async function getRecentOutstandingInvoices() {
 }
 export async function getDashboardData() {
   const [
-    stats,
-    recentPayments,
-    recentExpenses,
-    recentOutstandingInvoices,
-  ] = await Promise.all([
-    getDashboardStats(),
-    getRecentPayments(),
-    getRecentExpenses(),
-    getRecentOutstandingInvoices(),
-  ]);
+  stats,
+  recentPayments,
+  recentExpenses,
+  recentOutstandingInvoices,
+  chartData,
+] = await Promise.all([
+  getDashboardStats(),
+  getRecentPayments(),
+  getRecentExpenses(),
+  getRecentOutstandingInvoices(),
+  getMonthlyIncomeExpense(),
+]);
+  
 
   return {
-    stats,
-    recentPayments,
-    recentExpenses,
-    recentOutstandingInvoices,
-  };
+  stats,
+  recentPayments,
+  recentExpenses,
+  recentOutstandingInvoices,
+  chartData,
+};
+}
+export async function getMonthlyIncomeExpense() {
+  const payments = await prisma.payment.findMany({
+    select: {
+      amount: true,
+      paymentDate: true,
+    },
+    orderBy: {
+      paymentDate: "asc",
+    },
+  });
+
+  const expenses = await prisma.expense.findMany({
+    select: {
+      amount: true,
+      expenseDate: true,
+    },
+    orderBy: {
+      expenseDate: "asc",
+    },
+  });
+
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  return months.map((month, index) => ({
+    month,
+
+    income: payments
+      .filter(
+        (p) => p.paymentDate.getMonth() === index
+      )
+      .reduce((sum, p) => sum + p.amount, 0),
+
+    expense: expenses
+      .filter(
+        (e) => e.expenseDate.getMonth() === index
+      )
+      .reduce((sum, e) => sum + e.amount, 0),
+  }));
 }

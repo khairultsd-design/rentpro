@@ -1,6 +1,7 @@
 import { getDashboardData } from "@/features/dashboard/services/dashboard.service";
 import RecentPayments from "@/features/dashboard/components/RecentPayments";
 import OutstandingInvoices from "@/features/dashboard/components/OutstandingInvoices";
+import DashboardChart from "@/features/dashboard/components/DashboardChart";
 // Inline fallback component for RecentExpenses to avoid import errors
 function RecentExpenses({ expenses }: { expenses?: any[] }) {
   return (
@@ -22,7 +23,7 @@ function RecentExpenses({ expenses }: { expenses?: any[] }) {
     </div>
   );
 }
-import StatCard from "@/components/StatCard";
+import MetricCard from "@/components/MetricCard";
 import PageHeader from "@/components/PageHeader";
 import { formatCurrency } from "@/lib/format";
 
@@ -30,6 +31,7 @@ export default async function Home() {
   const dashboard = await getDashboardData();
 const stats = dashboard.stats;
 const recentPayments = dashboard.recentPayments;
+const chartData = dashboard.chartData;
 
   const cards = [
     {
@@ -101,14 +103,14 @@ const recentPayments = dashboard.recentPayments;
 
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
-          <StatCard
+          <MetricCard
             key={card.title}
             title={card.title}
             value={card.value}
           />
         ))}
       </div>
-
+<DashboardChart data={chartData} />
 <div className="grid gap-6 xl:grid-cols-3">
   <RecentPayments
     payments={dashboard.recentPayments.map((p: any) => ({
