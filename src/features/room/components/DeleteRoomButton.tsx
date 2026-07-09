@@ -20,8 +20,16 @@ export default function DeleteRoomButton({
     if (!confirmed) return;
 
     startTransition(async () => {
-      await deleteRoom(roomId);
-    });
+  try {
+    await deleteRoom(roomId);
+  } catch (error) {
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Failed to delete room."
+    );
+  }
+});
   }
 
   return (

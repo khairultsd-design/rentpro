@@ -62,15 +62,32 @@ export async function updateRoom(
 
 export async function deleteRoom(id: string) {
   const room = await prisma.room.findUnique({
-    where: {
-      id,
-    },
-  });
+  where: {
+    id,
+  },
+  include: {
+    tenancies: true,
+  },
+});
 
   if (!room) {
     return null;
   }
-
+if (room.tenancies.length > 0) {
+  throw new Error(
+    "This room has tenancy history and cannot be deleted."
+  );
+}
+  if (room.tenancies.length > 0) {
+    throw new Error(
+      "Room still has active tenancy. Check out tenant first."
+    );
+  }
+if (room.tenancies.length > 0) {
+  throw new Error(
+    "Room still contains tenancy records. Delete or complete tenancy first."
+  );
+}
   await prisma.room.delete({
     where: {
       id,
@@ -86,7 +103,8 @@ export async function deleteRoom(id: string) {
         decrement: 1,
       },
       availableRooms: {
-        decrement: room.status === "AVAILABLE" ? 1 : 0,
+        decrement:
+          room.status === "AVAILABLE" ? 1 : 0,
       },
     },
   });
