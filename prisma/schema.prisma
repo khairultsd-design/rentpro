@@ -118,6 +118,21 @@ model Expense {
   property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
+model CompanySetting {
+  id             String   @id @default(cuid())
+  companyName    String
+  companyLogo    String?
+  registrationNo String?
+  address        String?
+  phone          String?
+  email          String?
+  currency       String   @default("MYR")
+  invoicePrefix  String   @default("INV")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum RoomStatus {
   AVAILABLE
   OCCUPIED
