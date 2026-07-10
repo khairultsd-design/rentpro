@@ -38,6 +38,11 @@ const menus = [
     href: "/dashboard/reports",
     icon: "📊",
   },
+  {
+  name: "Settings",
+  href: "/dashboard/settings",
+  icon: "⚙️",
+}
 ];
 
 export default function Sidebar() {

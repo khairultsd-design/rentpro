@@ -19,8 +19,8 @@ model Property {
   status         String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  rooms          Room[]
   expenses       Expense[]
+  rooms          Room[]
 }
 
 model Room {
@@ -92,7 +92,6 @@ model Invoice {
 model Payment {
   id            String        @id @default(cuid())
   invoiceId     String
-  receiptNo     String?       @unique
   amount        Float
   paymentDate   DateTime
   paymentMethod PaymentMethod
@@ -100,6 +99,7 @@ model Payment {
   remarks       String?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  receiptNo     String?       @unique
   invoice       Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 }
 
@@ -111,11 +111,9 @@ model Expense {
   amount      Float
   expenseDate DateTime
   remarks     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  property    Property        @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 model CompanySetting {
@@ -128,9 +126,8 @@ model CompanySetting {
   email          String?
   currency       String   @default("MYR")
   invoicePrefix  String   @default("INV")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 enum RoomStatus {
