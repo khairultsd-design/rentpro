@@ -1,13 +1,24 @@
-import { getInvoices } from "@/features/invoice/services/invoice.service";
+import SearchBox from "@/components/SearchBox";
+import PageHeader from "@/components/PageHeader";
 import InvoiceTable from "@/features/invoice/components/InvoiceTable";
 import { generateInvoicesAction } from "@/features/invoice/actions/invoice.actions";
-import PageHeader from "@/components/PageHeader";
+import { getInvoices } from "@/features/invoice/services/invoice.service";
 
-export default async function InvoicesPage() {
-  const invoices = await getInvoices();
+type PageProps = {
+  searchParams: Promise<{
+    search?: string;
+  }>;
+};
+
+export default async function InvoicesPage({
+  searchParams,
+}: PageProps) {
+  const { search } = await searchParams;
+
+  const invoices = await getInvoices(search);
 
   return (
-    <div className="p-6">
+    <>
       <PageHeader
         title="Invoices"
         description="Manage rental invoices"
@@ -21,9 +32,14 @@ export default async function InvoicesPage() {
             </button>
           </form>
         }
-      />
+      >
+        <SearchBox
+          placeholder="Search invoice..."
+          defaultValue={search}
+        />
+      </PageHeader>
 
       <InvoiceTable invoices={invoices} />
-    </div>
+    </>
   );
 }

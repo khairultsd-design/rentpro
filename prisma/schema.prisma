@@ -177,3 +177,18 @@ enum ExpenseCategory {
   MAINTENANCE
   OTHER
 }
+enum UserRole {
+  ADMIN
+  STAFF
+}
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         UserRole @default(STAFF)
+  isActive     Boolean  @default(true)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

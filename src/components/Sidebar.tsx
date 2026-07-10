@@ -39,10 +39,15 @@ const menus = [
     icon: "📊",
   },
   {
-  name: "Settings",
-  href: "/dashboard/settings",
-  icon: "⚙️",
-}
+    name: "Settings",
+    href: "/dashboard/settings",
+    icon: "⚙️",
+  },
+  {
+    name: "Users",
+    href: "/dashboard/users",
+    icon: "👤",
+  },
 ];
 
 export default function Sidebar() {
@@ -68,22 +73,6 @@ export default function Sidebar() {
             <span className="font-medium">{menu.name}</span>
           </Link>
         ))}
-
-        <div className="mt-6 border-t pt-6">
-          <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-400">
-            <span className="text-lg">⚙️</span>
-
-            <div>
-              <p className="font-medium">
-                Settings
-              </p>
-
-              <p className="text-xs">
-                Coming Soon
-              </p>
-            </div>
-          </div>
-        </div>
       </nav>
     </aside>
   );

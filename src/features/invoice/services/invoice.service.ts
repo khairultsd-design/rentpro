@@ -118,8 +118,51 @@ export async function generateMonthlyInvoices() {
   };
 }
 
-export async function getInvoices() {
+export async function getInvoices(
+  search?: string
+) {
   return prisma.invoice.findMany({
+    where: search
+      ? {
+          OR: [
+            {
+              invoiceNumber: {
+                contains: search,
+              },
+            },
+            {
+              tenancy: {
+                tenant: {
+                  fullName: {
+                    contains: search,
+                  },
+                },
+              },
+            },
+            {
+              tenancy: {
+                room: {
+                  roomNumber: {
+                    contains: search,
+                  },
+                },
+              },
+            },
+            {
+              tenancy: {
+                room: {
+                  property: {
+                    name: {
+                      contains: search,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        }
+      : undefined,
+
     include: {
       tenancy: {
         include: {
@@ -133,29 +176,9 @@ export async function getInvoices() {
       },
       payments: true,
     },
+
     orderBy: {
       createdAt: "desc",
-    },
-  });
-}
-
-export async function getInvoiceById(id: string) {
-  return prisma.invoice.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      tenancy: {
-        include: {
-          tenant: true,
-          room: {
-            include: {
-              property: true,
-            },
-          },
-        },
-      },
-      payments: true,
     },
   });
 }

@@ -119,8 +119,64 @@ export async function getPaymentById(id: string) {
     },
   });
 }
-export async function getPayments() {
+export async function getPayments(
+  search?: string
+) {
   return prisma.payment.findMany({
+    where: search
+      ? {
+          OR: [
+            {
+              receiptNo: {
+                contains: search,
+              },
+            },
+            {
+              invoice: {
+                invoiceNumber: {
+                  contains: search,
+                },
+              },
+            },
+            {
+              invoice: {
+                tenancy: {
+                  tenant: {
+                    fullName: {
+                      contains: search,
+                    },
+                  },
+                },
+              },
+            },
+            {
+              invoice: {
+                tenancy: {
+                  room: {
+                    property: {
+                      name: {
+                        contains: search,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              invoice: {
+                tenancy: {
+                  room: {
+                    roomNumber: {
+                      contains: search,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        }
+      : undefined,
+
     include: {
       invoice: {
         include: {
@@ -137,6 +193,7 @@ export async function getPayments() {
         },
       },
     },
+
     orderBy: {
       paymentDate: "desc",
     },

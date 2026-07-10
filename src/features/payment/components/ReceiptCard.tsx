@@ -1,9 +1,11 @@
 type ReceiptCardProps = {
   payment: any;
+  company: any;
 };
 
 export default function ReceiptCard({
   payment,
+  company,
 }: ReceiptCardProps) {
   const invoice = payment.invoice;
   const tenancy = invoice.tenancy;
@@ -14,13 +16,39 @@ export default function ReceiptCard({
   return (
     <div className="rounded-xl bg-white p-8 shadow">
       <div className="border-b pb-6">
-        <h2 className="text-2xl font-bold">
-          RENTPRO
-        </h2>
 
-        <p className="text-slate-500">
-          Payment Receipt
-        </p>
+  <h2 className="text-2xl font-bold">
+    {company.companyName}
+  </h2>
+
+  {company.registrationNo && (
+    <p className="text-sm">
+      Registration No : {company.registrationNo}
+    </p>
+  )}
+
+  {company.address && (
+    <p className="text-sm">
+      {company.address}
+    </p>
+  )}
+
+  {company.phone && (
+    <p className="text-sm">
+      Phone : {company.phone}
+    </p>
+  )}
+
+  {company.email && (
+    <p className="text-sm">
+      Email : {company.email}
+    </p>
+  )}
+
+  <h3 className="mt-6 text-3xl font-bold">
+    PAYMENT RECEIPT
+  </h3>
+
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-6">
