@@ -1,3 +1,7 @@
+import {
+  Table,
+  EmptyState,
+} from "@/components/ui";
 import Link from "next/link";
 import StatusBadge from "@/components/StatusBadge";
 import { Property } from "../types/property";
@@ -10,24 +14,43 @@ type PropertyTableProps = {
 export default function PropertyTable({
   properties,
 }: PropertyTableProps) {
+  if (properties.length === 0) {
+    return (
+      <EmptyState
+        title="No Properties Found"
+        description="Start by adding your first rental property."
+      />
+    );
+  }
+
   return (
-    <div className="bg-white rounded-xl shadow overflow-hidden">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <table className="w-full">
-        <thead className="bg-slate-100">
-  <tr>
-    <th className="text-left p-4">Property</th>
-    <th className="text-left p-4">Type</th>
-    <th className="text-center p-4">Rooms</th>
-    <th className="text-center p-4">Available</th>
-    <th className="text-left p-4">Agreement</th>
-    <th className="text-center p-4">Status</th>
-    <th className="text-center p-4">Actions</th>
-  </tr>
-</thead>
+        <thead className="bg-slate-50">
+          <tr>
+            <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Property</th>
+            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Type</th>
+            <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Rooms</th>
+            <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Available</th>
+            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Agreement</th>
+            <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
+            <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Actions</th>
+          </tr>
+        </thead>
 
         <tbody>
-          {properties.map((property) => (
-            <tr key={property.id} className="border-t hover:bg-slate-50">
+          {properties.length === 0 ? (
+  <tr>
+    <td
+      colSpan={7}
+      className="py-10 text-center text-slate-500"
+    >
+      No properties found.
+    </td>
+  </tr>
+) : (
+            properties.map((property) => (
+            <tr key={property.id} className="border-t border-slate-100 transition-colors hover:bg-slate-50">
 
               <td className="p-4 font-semibold">
                 <Link
@@ -61,7 +84,7 @@ export default function PropertyTable({
   <div className="flex justify-center gap-2">
     <Link
       href={`/property/${property.id}/edit`}
-      className="rounded bg-amber-500 px-3 py-1 text-white hover:bg-amber-600"
+      className="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-amber-600"
     >
       Edit
     </Link>
@@ -73,7 +96,7 @@ export default function PropertyTable({
 </td>
 
             </tr>
-          ))}
+          )))}
         </tbody>
       </table>
     </div>

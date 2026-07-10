@@ -1,82 +1,85 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const menus = [
+  {
+    name: "Dashboard",
+    href: "/",
+    icon: "🏠",
+  },
+  {
+    name: "Properties",
+    href: "/property",
+    icon: "🏢",
+  },
+  {
+    name: "Tenancies",
+    href: "/dashboard/tenancies",
+    icon: "🛏️",
+  },
+  {
+    name: "Invoices",
+    href: "/dashboard/invoices",
+    icon: "📄",
+  },
+  {
+    name: "Payments",
+    href: "/payment",
+    icon: "💰",
+  },
+  {
+    name: "Expenses",
+    href: "/expense",
+    icon: "💸",
+  },
+  {
+    name: "Reports",
+    href: "/dashboard/reports",
+    icon: "📊",
+  },
+];
 
 export default function Sidebar() {
+  const pathname = usePathname();
   return (
     <aside className="min-h-screen w-64 border-r border-slate-200 bg-white p-6">
-      <h2 className="mb-6 text-lg font-bold">
+      <h2 className="mb-8 text-xl font-bold text-slate-800">
         Menu
       </h2>
 
-      <ul className="space-y-2">
-        <li>
+      <nav className="space-y-2">
+        {menus.map((menu) => (
           <Link
-            href="/"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
+            key={menu.name}
+            href={menu.href}
+            className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+  pathname === menu.href
+    ? "bg-blue-600 text-white shadow-md"
+    : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+}`}
           >
-            🏠 Dashboard
+            <span className="text-lg">{menu.icon}</span>
+            <span className="font-medium">{menu.name}</span>
           </Link>
-        </li>
+        ))}
 
-        <li>
-          <Link
-            href="/property"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            🏢 Properties
-          </Link>
-        </li>
+        <div className="mt-6 border-t pt-6">
+          <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-400">
+            <span className="text-lg">⚙️</span>
 
-        <li>
-          <Link
-            href="/dashboard/tenancies"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            🏠 Tenancies
-          </Link>
-        </li>
+            <div>
+              <p className="font-medium">
+                Settings
+              </p>
 
-        <li>
-          <Link
-            href="/dashboard/invoices"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            📄 Invoices
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="/payment"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            💰 Payments
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="/expense"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            💸 Expenses
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="/dashboard/reports"
-            className="block rounded-lg px-3 py-2 transition hover:bg-slate-100"
-          >
-            📊 Reports
-          </Link>
-        </li>
-
-        <li>
-          <span className="block rounded-lg px-3 py-2 text-gray-400">
-            ⚙️ Settings (Coming Soon)
-          </span>
-        </li>
-      </ul>
+              <p className="text-xs">
+                Coming Soon
+              </p>
+            </div>
+          </div>
+        </div>
+      </nav>
     </aside>
   );
 }

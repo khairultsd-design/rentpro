@@ -1,29 +1,11 @@
 import { getDashboardData } from "@/features/dashboard/services/dashboard.service";
 import RecentPayments from "@/features/dashboard/components/RecentPayments";
+import RecentExpenses from "@/features/dashboard/components/RecentExpenses";
 import OutstandingInvoices from "@/features/dashboard/components/OutstandingInvoices";
 import DashboardChart from "@/features/dashboard/components/DashboardChart";
 import GenerateInvoicesButton from "@/features/invoice/components/GenerateInvoicesButton";
 // Inline fallback component for RecentExpenses to avoid import errors
-function RecentExpenses({ expenses }: { expenses?: any[] }) {
-  return (
-    <div>
-      <h2 className="text-lg font-medium">Recent Expenses</h2>
-      <div className="mt-4 space-y-2">
-        {expenses && expenses.length > 0 ? (
-          expenses.map((exp, idx) => (
-            <div key={idx} className="p-3 border rounded">
-              <div className="text-sm font-semibold">{exp.title || `Expense ${idx + 1}`}</div>
-              <div className="text-sm text-muted-foreground">{exp.date}</div>
-              <div className="text-sm">{typeof exp.amount === 'number' ? `RM ${exp.amount.toFixed(2)}` : exp.amount}</div>
-            </div>
-          ))
-        ) : (
-          <div className="text-sm text-muted-foreground">No recent expenses</div>
-        )}
-      </div>
-    </div>
-  );
-}
+
 import MetricCard from "@/components/MetricCard";
 import PageHeader from "@/components/PageHeader";
 import { formatCurrency } from "@/lib/format";
@@ -34,78 +16,59 @@ const stats = dashboard.stats;
 const recentPayments = dashboard.recentPayments;
 const chartData = dashboard.chartData;
 
-  const cards = [
-    {
-      title: "🏢 Properties",
-      value: stats.totalProperties,
-    },
-    {
-      title: "🚪 Rooms",
-      value: stats.totalRooms,
-    },
-    {
-      title: "🟢 Available Rooms",
-      value: stats.availableRooms,
-    },
-    {
-      title: "👤 Active Tenants",
-      value: stats.activeTenants,
-    },
-    {
-      title: "📄 Active Tenancies",
-      value: stats.activeTenancies,
-    },
-    {
-      title: "💰 Total Collection",
-      value: `RM ${stats.collection.toFixed(2)}`,
-    },
-    {
-      title: "💸 Outstanding",
-      value: `RM ${stats.outstanding.toFixed(2)}`,
-    },
-    {
-      title: "⚠️ Overdue Invoices",
-      value: stats.overdueInvoices,
-    },
-    {
-  title: "💸 Expenses",
-  value: formatCurrency(stats.expenses),
-},
-{
-  title: "📈 Net Profit",
-  value: formatCurrency(stats.profit),
-},
-{
-  title: "🏠 Occupancy Rate",
-  value: `${stats.occupancyRate}%`,
-},
-{
-  title: "💳 Collection Rate",
-  value: `${stats.collectionRate}%`,
-},
-{
-  title: "📉 Expense Ratio",
-  value: `${stats.expenseRatio}%`,
-},
-  ];
+const cards = [
+  {
+    title: "🏢 Properties",
+    value: stats.totalProperties,
+  },
+  {
+    title: "🟢 Available Rooms",
+    value: stats.availableRooms,
+  },
+  {
+    title: "👤 Active Tenants",
+    value: stats.activeTenants,
+  },
+  {
+    title: "🏠 Occupancy Rate",
+    value: `${stats.occupancyRate}%`,
+  },
+  {
+    title: "💰 Total Collection",
+    value: formatCurrency(stats.collection),
+  },
+  {
+    title: "💸 Expenses",
+    value: formatCurrency(stats.expenses),
+  },
+  {
+    title: "📈 Net Profit",
+    value: formatCurrency(stats.profit),
+  },
+  {
+    title: "⚠️ Overdue Invoices",
+    value: stats.overdueInvoices,
+  },
+  {
+    title: "💸 Outstanding",
+    value: formatCurrency(stats.outstanding),
+  },
+];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">
-          Dashboard
-        </h1>
-
-        <PageHeader
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+ <PageHeader
   title="Dashboard"
-  description="Welcome to RentPro Management System"
+  description="Overview of your rental business"
 />
-<div className="flex justify-end">
-  <GenerateInvoicesButton />
-</div>
+        </div>
+
+        <GenerateInvoicesButton />
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {cards.map((card) => (
           <MetricCard
             key={card.title}
@@ -114,23 +77,27 @@ const chartData = dashboard.chartData;
           />
         ))}
       </div>
-<DashboardChart data={chartData} />
-<div className="grid gap-6 xl:grid-cols-3">
-  <RecentPayments
-    payments={dashboard.recentPayments.map((p: any) => ({
-      ...p,
-      paymentDate: p.paymentDate instanceof Date ? p.paymentDate.toISOString() : String(p.paymentDate),
-    }))}
-  />
 
-  <RecentExpenses
-    expenses={dashboard.recentExpenses}
-  />
-
-  <OutstandingInvoices
-    invoices={dashboard.recentOutstandingInvoices}
-  />
+      <div className="mb-8">
+  <DashboardChart data={chartData} />
 </div>
+
+<div className="grid gap-6 xl:grid-cols-3">
+        <RecentPayments
+          payments={dashboard.recentPayments.map((p: any) => ({
+            ...p,
+            paymentDate: p.paymentDate instanceof Date ? p.paymentDate.toISOString() : String(p.paymentDate),
+          }))}
+        />
+
+        <RecentExpenses
+          expenses={dashboard.recentExpenses}
+        />
+
+        <OutstandingInvoices
+          invoices={dashboard.recentOutstandingInvoices}
+        />
+      </div>
     </div>
   );
 }

@@ -25,14 +25,17 @@ export default function DashboardChart({
   data,
 }: Props) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-lg font-semibold">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 className="mb-2 text-lg font-semibold text-slate-800">
         Monthly Income vs Expense
       </h2>
 
-      <ResponsiveContainer width="100%" height={420}>
+      <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid
+    stroke="#e5e7eb"
+    strokeDasharray="2 2"
+/>
           <XAxis dataKey="month" />
           <YAxis
   tickFormatter={(value) => `RM ${value}`}
@@ -45,7 +48,7 @@ export default function DashboardChart({
 />
           <Legend
   verticalAlign="top"
-  height={36}
+  height={20}
 />
 
           <Bar
