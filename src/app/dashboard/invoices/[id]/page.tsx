@@ -3,6 +3,8 @@ import { getInvoiceById } from "@/features/invoice/services/invoice.service";
 import InvoiceDetailCard from "@/features/invoice/components/InvoiceDetailCard";
 import PaymentHistory from "@/features/invoice/components/PaymentHistory";
 import RecordPaymentForm from "@/features/payment/components/RecordPaymentForm";
+import { getCompany } from "@/features/company/services/company.service";
+import ExportInvoicePdfButton from "@/features/invoice/components/ExportInvoicePdfButton";
 
 type PageProps = {
   params: Promise<{
@@ -15,19 +17,32 @@ export default async function InvoiceDetailPage({
 }: PageProps) {
   const { id } = await params;
 
-  const invoice = await getInvoiceById(id);
+  const [invoice, company] = await Promise.all([
+  getInvoiceById(id),
+  getCompany(),
+]);
 
-  if (!invoice) {
-    notFound();
-  }
+if (!invoice) {
+  notFound();
+}
 
   return (
     <div className="space-y-6 p-6">
-      <h1 className="text-2xl font-bold">
-        Invoice Details
-      </h1>
+      <div className="flex items-center justify-between">
+  <h1 className="text-2xl font-bold">
+    Invoice Details
+  </h1>
 
-      <InvoiceDetailCard invoice={invoice} />
+  <ExportInvoicePdfButton
+    invoice={invoice}
+    company={company}
+  />
+</div>
+
+      <InvoiceDetailCard
+  invoice={invoice}
+  company={company}
+/>
       <PaymentHistory payments={invoice.payments} />
       <RecordPaymentForm invoiceId={invoice.id} />
     </div>
