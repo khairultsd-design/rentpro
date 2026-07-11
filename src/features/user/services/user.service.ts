@@ -77,13 +77,15 @@ export async function getUsers(
             },
             {
               role: {
-                equals:
-                  search.toUpperCase() === "ADMIN"
-                    ? UserRole.ADMIN
-                    : search.toUpperCase() === "STAFF"
-                    ? UserRole.STAFF
-                    : undefined,
-              },
+  equals:
+    search.toUpperCase() === "ADMIN"
+      ? UserRole.ADMIN
+      : search.toUpperCase() === "MANAGER"
+      ? UserRole.MANAGER
+      : search.toUpperCase() === "STAFF"
+      ? UserRole.STAFF
+      : undefined,
+},
             },
           ],
         }

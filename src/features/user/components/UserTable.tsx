@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ToggleUserStatusButton from "./ToggleUserStatusButton";
+import RoleBadge from "@/components/common/RoleBadge";
 
 type User = {
   id: string;
@@ -44,7 +45,7 @@ export default function UserTable({
               </td>
 
               <td className="p-4">
-                {user.role}
+                <RoleBadge role={user.role} />
               </td>
 
               <td className="p-4">

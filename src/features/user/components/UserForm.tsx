@@ -53,15 +53,19 @@ export default function UserForm({
         label="Role"
         defaultValue={user?.role}
         options={[
-          {
-            label: "Admin",
-            value: "ADMIN",
-          },
-          {
-            label: "Staff",
-            value: "STAFF",
-          },
-        ]}
+  {
+    label: "Admin",
+    value: "ADMIN",
+  },
+  {
+    label: "Manager",
+    value: "MANAGER",
+  },
+  {
+    label: "Staff",
+    value: "STAFF",
+  },
+]}
       />
 
       <button

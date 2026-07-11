@@ -179,6 +179,7 @@ enum ExpenseCategory {
 }
 enum UserRole {
   ADMIN
+  MANAGER
   STAFF
 }
 model User {
