@@ -2,6 +2,7 @@ import PageHeader from "@/components/PageHeader";
 import SearchBox from "@/components/SearchBox";
 import UserForm from "@/features/user/components/UserForm";
 import { getUsers } from "@/features/user/services/user.service";
+import UserTable from "@/features/user/components/UserTable";
 
 type PageProps = {
   searchParams: Promise<{
@@ -29,6 +30,7 @@ export default async function UsersPage({
       </PageHeader>
 
       <UserForm />
+      <UserTable users={users} />
 
       <div className="rounded-xl bg-white shadow">
         <table className="w-full">

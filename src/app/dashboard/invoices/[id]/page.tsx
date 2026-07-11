@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getInvoiceById } from "@/features/invoice/services/invoice.service";
+import { getInvoices } from "@/features/invoice/services/invoice.service";
 import InvoiceDetailCard from "@/features/invoice/components/InvoiceDetailCard";
 import PaymentHistory from "@/features/invoice/components/PaymentHistory";
 import RecordPaymentForm from "@/features/payment/components/RecordPaymentForm";
@@ -17,14 +17,14 @@ export default async function InvoiceDetailPage({
 }: PageProps) {
   const { id } = await params;
 
-  const [invoice, company] = await Promise.all([
-  getInvoiceById(id),
-  getCompany(),
-]);
+  const [invoices, company] = await Promise.all([
+    getInvoices(),
+    getCompany(),
+  ]);
 
-if (!invoice) {
-  notFound();
-}
+  const invoice = invoices?.find((inv) => inv.id === id);
+
+  if (!invoice) notFound();
 
   return (
     <div className="space-y-6 p-6">

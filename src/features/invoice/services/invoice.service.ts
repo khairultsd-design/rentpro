@@ -182,3 +182,23 @@ export async function getInvoices(
     },
   });
 }
+export async function getInvoiceById(id: string) {
+  return prisma.invoice.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      tenancy: {
+        include: {
+          tenant: true,
+          room: {
+            include: {
+              property: true,
+            },
+          },
+        },
+      },
+      payments: true,
+    },
+  });
+}

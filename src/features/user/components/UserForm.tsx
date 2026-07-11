@@ -1,43 +1,49 @@
 "use client";
 
+import TextInput from "@/components/form/TextInput";
+import SelectInput from "@/components/form/SelectInput";
 import { createUserAction } from "../actions/user.action";
 
 export default function UserForm() {
   return (
     <form
       action={createUserAction}
-      className="max-w-xl space-y-4"
+      className="max-w-xl rounded-xl bg-white p-6 shadow"
     >
-      <input
+      <TextInput
         name="name"
-        placeholder="Full Name"
-        className="w-full rounded-lg border p-3"
-        required
+        label="Full Name"
+        placeholder="Enter full name"
       />
 
-      <input
+      <TextInput
         name="email"
+        label="Email"
         type="email"
-        placeholder="Email"
-        className="w-full rounded-lg border p-3"
-        required
+        placeholder="Enter email"
       />
 
-      <input
+      <TextInput
         name="password"
+        label="Password"
         type="password"
-        placeholder="Password"
-        className="w-full rounded-lg border p-3"
-        required
+        placeholder="Enter password"
       />
 
-      <select
+      <SelectInput
         name="role"
-        className="w-full rounded-lg border p-3"
-      >
-        <option value="STAFF">Staff</option>
-        <option value="ADMIN">Admin</option>
-      </select>
+        label="Role"
+        options={[
+          {
+            label: "Admin",
+            value: "ADMIN",
+          },
+          {
+            label: "Staff",
+            value: "STAFF",
+          },
+        ]}
+      />
 
       <button
         type="submit"
