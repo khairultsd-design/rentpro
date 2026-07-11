@@ -22,7 +22,42 @@ export async function createUser(data: {
     },
   });
 }
+export async function getUserById(id: string) {
+  return prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+}
 
+export async function updateUser(
+  id: string,
+  data: {
+    name: string;
+    email: string;
+    role: UserRole;
+  }
+) {
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data,
+  });
+}
+export async function setUserStatus(
+  id: string,
+  isActive: boolean
+) {
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      isActive,
+    },
+  });
+}
 export async function getUsers(
   search?: string
 ) {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ToggleUserStatusButton from "./ToggleUserStatusButton";
 
 type User = {
   id: string;
@@ -54,11 +55,16 @@ export default function UserTable({
 
               <td className="p-4">
                 <Link
-                  href={`/dashboard/users/${user.id}/edit`}
-                  className="text-blue-600 hover:underline"
-                >
-                  Edit
-                </Link>
+  href={`/dashboard/users/${user.id}/edit`}
+  className="text-blue-600 hover:underline"
+>
+  Edit
+</Link>
+                <ToggleUserStatusButton
+                  id={user.id}
+                  isActive={user.isActive}
+                />
+
               </td>
             </tr>
           ))}
