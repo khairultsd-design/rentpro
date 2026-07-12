@@ -4,6 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import EmptyState from "@/components/EmptyState";
 import DeleteExpenseButton from "@/features/expense/components/DeleteExpenseButton";
 import SearchBox from "@/components/SearchBox";
+
 // Local lightweight Table wrapper in case the shared Table component is missing
 const Table = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -40,6 +41,7 @@ const TableCell = ({
 
 
 import { getExpenses } from "@/features/expense/services/expense.service";
+import { requireRole } from "@/lib/auth";
 
 type ExpensePageProps = {
   searchParams: Promise<{
@@ -51,7 +53,7 @@ export default async function ExpensePage({
   searchParams,
 }: ExpensePageProps) {
   const { search } = await searchParams;
-
+await requireRole(["ADMIN", "MANAGER"]);
   const expenses = await getExpenses(search);
 
   return (

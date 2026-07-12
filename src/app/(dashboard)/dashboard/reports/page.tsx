@@ -5,6 +5,7 @@ import ReportTransactions from "@/features/reports/components/ReportTransactions
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import ExportPdfButton from "@/features/reports/components/ExportPdfButton";
+import { requireRole } from "@/lib/auth";
 
 type ReportsPageProps = {
   searchParams: Promise<{
@@ -17,7 +18,7 @@ export default async function ReportsPage({
   searchParams,
 }: ReportsPageProps) {
   const params = await searchParams;
-
+await requireRole(["ADMIN", "MANAGER"]);
 const today = new Date();
 
 const month = Number(

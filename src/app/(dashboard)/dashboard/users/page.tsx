@@ -3,6 +3,7 @@ import SearchBox from "@/components/SearchBox";
 import UserForm from "@/features/user/components/UserForm";
 import { getUsers } from "@/features/user/services/user.service";
 import UserTable from "@/features/user/components/UserTable";
+import { requireRole } from "@/lib/auth";
 
 type PageProps = {
   searchParams: Promise<{
@@ -13,6 +14,7 @@ type PageProps = {
 export default async function UsersPage({
   searchParams,
 }: PageProps) {
+  await requireRole(["ADMIN"]);
   const { search } = await searchParams;
 
   const users = await getUsers(search);
