@@ -9,12 +9,15 @@ import {
   deleteProperty as deletePropertyService,
 } from "../services/property.service";
 
-import type {
-  CreatePropertyDto,
-} from "../types/property";
+import type { CreatePropertyDto } from "../types/property";
+
 import { requireManager } from "@/lib/auth";
+import { createAuditLog } from "@/features/audit/services/audit.service";
+import { AuditAction, AuditModule } from "@/lib/audit";
+
 export async function createProperty(formData: FormData) {
-  await requireManager();
+  const session = await requireManager();
+
   const dto: CreatePropertyDto = {
     name: formData.get("name") as string,
     type: formData.get("type") as string,
@@ -39,18 +42,26 @@ export async function createProperty(formData: FormData) {
     status: formData.get("status") as string,
   };
 
- await createPropertyService(dto);
+  await createPropertyService(dto);
 
-revalidatePath("/property");
+  await createAuditLog({
+    userId: session.id,
+    module: AuditModule.PROPERTY,
+    action: AuditAction.CREATE,
+    description: `Created property "${dto.name}"`,
+  });
 
-redirect("/property");
+  revalidatePath("/property");
+
+  redirect("/property");
 }
 
 export async function updateProperty(
   id: string,
   formData: FormData
 ) {
-  await requireManager();
+  const session = await requireManager();
+
   const dto: CreatePropertyDto = {
     name: formData.get("name") as string,
     type: formData.get("type") as string,
@@ -75,17 +86,34 @@ export async function updateProperty(
     status: formData.get("status") as string,
   };
 
-  
   await updatePropertyService(id, dto);
 
-revalidatePath("/property");
-revalidatePath(`/property/${id}`);
+  await createAuditLog({
+    userId: session.id,
+    module: AuditModule.PROPERTY,
+    action: AuditAction.UPDATE,
+    description: `Updated property "${dto.name}"`,
+  });
 
-redirect("/property");
-}export async function deleteProperty(id: string) {
+  revalidatePath("/property");
+  revalidatePath(`/property/${id}`);
+
+  redirect("/property");
+}
+
+export async function deleteProperty(id: string) {
+  const session = await requireManager();
+
   try {
     await deletePropertyService(id);
-await requireManager();
+
+    await createAuditLog({
+      userId: session.id,
+      module: AuditModule.PROPERTY,
+      action: AuditAction.DELETE,
+      description: `Deleted property (${id})`,
+    });
+
     revalidatePath("/property");
 
     return {

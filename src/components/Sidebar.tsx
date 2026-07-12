@@ -61,6 +61,12 @@ const menus: MenuItem[] = [
     roles: ["ADMIN", "MANAGER"],
   },
   {
+  name: "Audit Logs",
+  href: "/dashboard/audit",
+  icon: "📝",
+  roles: ["ADMIN"],
+},
+  {
     name: "Settings",
     href: "/dashboard/settings",
     icon: "⚙️",
@@ -73,6 +79,7 @@ const menus: MenuItem[] = [
     roles: ["ADMIN"],
   },
 ];
+
 
 type SidebarProps = {
   user: User;

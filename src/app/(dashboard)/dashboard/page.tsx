@@ -9,13 +9,15 @@ import GenerateInvoicesButton from "@/features/invoice/components/GenerateInvoic
 import MetricCard from "@/components/MetricCard";
 import PageHeader from "@/components/PageHeader";
 import { formatCurrency } from "@/lib/format";
+import RecentActivity from "@/features/dashboard/components/RecentActivity";
+import { getRecentActivities } from "@/features/dashboard/services/activity.service";
 
 export default async function Home() {
   const dashboard = await getDashboardData();
 const stats = dashboard.stats;
 const recentPayments = dashboard.recentPayments;
 const chartData = dashboard.chartData;
-
+const activities = await getRecentActivities();
 const cards = [
   {
     title: "🏢 Properties",
@@ -82,7 +84,7 @@ const cards = [
   <DashboardChart data={chartData} />
 </div>
 
-<div className="grid gap-6 xl:grid-cols-3">
+<div className="grid gap-6 xl:grid-cols-2">
         <RecentPayments
           payments={dashboard.recentPayments.map((p: any) => ({
             ...p,
@@ -97,6 +99,9 @@ const cards = [
         <OutstandingInvoices
           invoices={dashboard.recentOutstandingInvoices}
         />
+        <RecentActivity
+  activities={activities}
+/>
       </div>
     </div>
   );
