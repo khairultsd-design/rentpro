@@ -15,7 +15,6 @@ export default async function EditRoomPage({
   params,
 }: PageProps) {
   const { id, roomId } = await params;
-
   const room = await getRoomById(roomId);
 
   if (!room) {

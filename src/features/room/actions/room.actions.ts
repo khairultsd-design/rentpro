@@ -8,6 +8,7 @@ import {
   updateRoom as updateRoomService,
   deleteRoom as deleteRoomService,
 } from "../services/room.service";
+import { requireManager } from "@/lib/auth";
 
 type CreateRoomInput = {
   propertyId: string;
@@ -17,6 +18,7 @@ type CreateRoomInput = {
 };
 
 export async function createRoom(data: CreateRoomInput) {
+  await requireManager();
   await createRoomService({
     propertyId: data.propertyId,
     roomNumber: data.roomNumber,
@@ -33,6 +35,7 @@ export async function updateRoom(
   propertyId: string,
   formData: FormData
 ) {
+  await requireManager();
   await updateRoomService(roomId, {
     roomNumber: formData.get("roomNumber") as string,
     floor: (formData.get("floor") as string) || undefined,
@@ -44,6 +47,7 @@ export async function updateRoom(
 }
 
 export async function deleteRoom(roomId: string) {
+  await requireManager();
   const propertyId = await deleteRoomService(roomId);
 
   if (!propertyId) return;

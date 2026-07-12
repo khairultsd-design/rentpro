@@ -12,8 +12,9 @@ import {
 import type {
   CreatePropertyDto,
 } from "../types/property";
-
+import { requireManager } from "@/lib/auth";
 export async function createProperty(formData: FormData) {
+  await requireManager();
   const dto: CreatePropertyDto = {
     name: formData.get("name") as string,
     type: formData.get("type") as string,
@@ -49,6 +50,7 @@ export async function updateProperty(
   id: string,
   formData: FormData
 ) {
+  await requireManager();
   const dto: CreatePropertyDto = {
     name: formData.get("name") as string,
     type: formData.get("type") as string,
@@ -83,7 +85,7 @@ redirect("/property");
 }export async function deleteProperty(id: string) {
   try {
     await deletePropertyService(id);
-
+await requireManager();
     revalidatePath("/property");
 
     return {

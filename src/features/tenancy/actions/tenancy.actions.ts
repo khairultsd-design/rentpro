@@ -8,15 +8,14 @@ import {
   createTenancy,
   checkOutTenancy,
 } from "../services/tenancy.service";
-
+import { requireStaff } from "@/lib/auth";
 export async function checkInTenant(
   propertyId: string,
   tenantId: string,
   formData: FormData
 ) {
-  
-  
-const tenancy = await createTenancy({
+  await requireStaff();
+  const tenancy = await createTenancy({
     tenantId,
     roomId: formData.get("roomId") as string,
     moveInDate: new Date(formData.get("moveInDate") as string),
@@ -37,6 +36,7 @@ export async function checkOutTenant(
   propertyId: string,
   tenancyId: string
 ) {
+  await requireStaff();
   await checkOutTenancy(tenancyId);
 
   revalidatePath("/dashboard/tenancies");

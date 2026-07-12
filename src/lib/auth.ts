@@ -14,6 +14,7 @@ export async function requireAuth() {
 export async function requireRole(
   roles: string[]
 ) {
+    
   const session = await requireAuth();
 
   if (!roles.includes(session.role)) {
@@ -21,4 +22,19 @@ export async function requireRole(
   }
 
   return session;
+}
+export async function requireAdmin() {
+  return requireRole(["ADMIN"]);
+}
+
+export async function requireManager() {
+  return requireRole(["ADMIN", "MANAGER"]);
+}
+
+export async function requireStaff() {
+  return requireRole([
+    "ADMIN",
+    "MANAGER",
+    "STAFF",
+  ]);
 }

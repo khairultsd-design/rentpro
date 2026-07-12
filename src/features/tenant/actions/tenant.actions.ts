@@ -7,7 +7,7 @@ import {
   createTenant as createTenantService,
   updateTenant as updateTenantService,
 } from "../services/tenant.service";
-
+import { requireStaff } from "@/lib/auth";
 type CreateTenantInput = {
   fullName: string;
   phone: string;
@@ -23,6 +23,7 @@ export async function createTenant(
   propertyId: string,
   data: CreateTenantInput
 ) {
+  await requireStaff();
   const tenant = await createTenantService(data);
 
   revalidatePath(`/property/${propertyId}`);
@@ -45,7 +46,7 @@ export async function updateTenant(
   }
 ) {
   await updateTenantService(tenantId, data);
-
+await requireStaff();
   revalidatePath(`/property/${propertyId}`);
 
   redirect(`/property/${propertyId}`);
