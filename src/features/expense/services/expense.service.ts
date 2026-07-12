@@ -1,6 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { ExpenseCategory } from "@prisma/client";
 
+import {
+  AuditAction,
+  AuditModule,
+} from "@/lib/audit";
+
+import { createAuditLog } from "@/features/audit/services/audit-log.service";
+
 type CreateExpenseInput = {
   propertyId: string;
   title: string;
@@ -11,11 +18,21 @@ type CreateExpenseInput = {
 };
 
 export async function createExpense(
-  data: CreateExpenseInput
+  data: CreateExpenseInput,
+  auditUserId: string
 ) {
-  return prisma.expense.create({
+  const expense = await prisma.expense.create({
     data,
   });
+
+  await createAuditLog({
+    userId: auditUserId,
+    module: AuditModule.EXPENSE,
+    action: AuditAction.CREATE,
+    description: `Created expense "${expense.title}"`,
+  });
+
+  return expense;
 }
 
 export async function getExpenses(
@@ -62,10 +79,24 @@ export async function getExpenseById(id: string) {
   });
 }
 
-export async function deleteExpense(id: string) {
-  return prisma.expense.delete({
-    where: { id },
+export async function deleteExpense(
+  id: string,
+  auditUserId: string
+) {
+  const expense = await prisma.expense.delete({
+    where: {
+      id,
+    },
   });
+
+  await createAuditLog({
+    userId: auditUserId,
+    module: AuditModule.EXPENSE,
+    action: AuditAction.DELETE,
+    description: `Deleted expense "${expense.title}"`,
+  });
+
+  return expense;
 }
 
 type UpdateExpenseInput = {
@@ -79,12 +110,22 @@ type UpdateExpenseInput = {
 
 export async function updateExpense(
   id: string,
-  data: UpdateExpenseInput
+  data: UpdateExpenseInput,
+  auditUserId: string
 ) {
-  return prisma.expense.update({
+  const expense = await prisma.expense.update({
     where: {
       id,
     },
     data,
   });
+
+  await createAuditLog({
+    userId: auditUserId,
+    module: AuditModule.EXPENSE,
+    action: AuditAction.UPDATE,
+    description: `Updated expense "${expense.title}"`,
+  });
+
+  return expense;
 }

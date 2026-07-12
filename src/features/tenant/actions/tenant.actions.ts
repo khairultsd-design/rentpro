@@ -3,11 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { requireStaff } from "@/lib/auth";
+
 import {
   createTenant as createTenantService,
   updateTenant as updateTenantService,
 } from "../services/tenant.service";
-import { requireStaff } from "@/lib/auth";
+
 type CreateTenantInput = {
   fullName: string;
   phone: string;
@@ -23,12 +25,19 @@ export async function createTenant(
   propertyId: string,
   data: CreateTenantInput
 ) {
-  await requireStaff();
-  const tenant = await createTenantService(data);
+  const staff = await requireStaff();
+
+  const tenant =
+    await createTenantService(
+      data,
+      staff.id
+    );
 
   revalidatePath(`/property/${propertyId}`);
 
-  redirect(`/property/${propertyId}/tenant/${tenant.id}`);
+  redirect(
+    `/property/${propertyId}/tenant/${tenant.id}`
+  );
 }
 
 export async function updateTenant(
@@ -45,8 +54,14 @@ export async function updateTenant(
     emergencyContactPhone?: string;
   }
 ) {
-  await updateTenantService(tenantId, data);
-await requireStaff();
+  const staff = await requireStaff();
+
+  await updateTenantService(
+    tenantId,
+    data,
+    staff.id
+  );
+
   revalidatePath(`/property/${propertyId}`);
 
   redirect(`/property/${propertyId}`);

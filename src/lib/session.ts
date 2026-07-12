@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-
 const SESSION_NAME = "rentpro_session";
 
 export async function createSession(user: {

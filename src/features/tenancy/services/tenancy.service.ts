@@ -1,10 +1,18 @@
 import { createInvoice } from "@/features/invoice/services/invoice.service";
 import { prisma } from "@/lib/prisma";
+
 import {
   RoomStatus,
   TenantStatus,
   TenancyStatus,
 } from "@prisma/client";
+
+import {
+  AuditAction,
+  AuditModule,
+} from "@/lib/audit";
+
+import { createAuditLog } from "@/features/audit/services/audit-log.service";
 
 type CreateTenancyInput = {
   tenantId: string;
@@ -17,7 +25,8 @@ type CreateTenancyInput = {
 };
 
 export async function createTenancy(
-  data: CreateTenancyInput
+  data: CreateTenancyInput,
+  auditUserId: string
 ) {
   return prisma.$transaction(async (tx) => {
     const room = await tx.room.findUnique({
@@ -101,7 +110,10 @@ export async function createTenancy(
       tx
     );
 
-    return tenancy;
+    return {
+  tenancy,
+  room,
+};
   });
 }
 
@@ -173,18 +185,18 @@ export async function getTenancyById(
 }
 
 export async function checkOutTenancy(
-  id: string
+  id: string,
+  auditUserId: string
 ) {
   return prisma.$transaction(async (tx) => {
-    const tenancy =
-      await tx.tenancy.findUnique({
-        where: {
-          id,
-        },
-        include: {
-          room: true,
-        },
-      });
+    const tenancy = await tx.tenancy.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        room: true,
+      },
+    });
 
     if (!tenancy) {
       throw new Error("Tenancy not found.");
@@ -239,5 +251,14 @@ export async function checkOutTenancy(
         },
       },
     });
+
+    await createAuditLog({
+      userId: auditUserId,
+      module: AuditModule.TENANCY,
+      action: AuditAction.CHECK_OUT,
+      description: `Checked out tenant`,
+    });
+
+    return tenancy;
   });
 }
