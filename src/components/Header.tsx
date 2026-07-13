@@ -1,17 +1,22 @@
 import {
-  Bell,
   Building2,
   ChevronDown,
 } from "lucide-react";
 
 import LogoutButton from "../features/user/components/LogoutButton";
-import NotificationDropdown from "@/features/notification/components/NotificationDropdown";
+import NotificationBell from "@/features/notification/components/NotificationBell";
 
 import { getSession } from "@/lib/session";
-import { getUnreadCount } from "@/features/notification/services/notification.service";
+import {
+  getNotifications,
+  getUnreadCount,
+} from "@/features/notification/services/notification.service";
 
 export default async function Header() {
   const user = await getSession();
+
+  const notifications =
+    await getNotifications(10);
 
   const unreadCount =
     await getUnreadCount();
@@ -37,19 +42,10 @@ export default async function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="relative">
-            <button className="relative rounded-xl border border-slate-200 bg-white p-3 transition hover:bg-slate-100">
-              <Bell className="h-5 w-5 text-slate-700" />
-
-              {unreadCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            <NotificationDropdown />
-          </div>
+          <NotificationBell
+            unreadCount={unreadCount}
+            notifications={notifications}
+          />
 
           <button className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2 transition hover:bg-slate-100">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 font-semibold text-white">
