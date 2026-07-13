@@ -276,15 +276,75 @@ DATABASE_URL="file:./dev.db"
 
 # 📸 Screenshots
 
-Coming Soon
+## 🏠 Dashboard
 
-- Dashboard
-- Property
-- Room
-- Tenant
-- Invoice
-- Payment
-- Reports
+![Dashboard](docs/screenshots/dashboard.png)
+
+---
+
+## 🏢 Properties
+
+![Properties](docs/screenshots/property-list.png)
+
+---
+
+## 🚪 Property Details
+
+![Property Details](docs/screenshots/property-details.png)
+
+---
+
+## 👤 New Tenant
+
+![New Tenant](docs/screenshots/new-tenant.png)
+
+---
+
+## 📑 Tenancies
+
+![Tenancies](docs/screenshots/tenancies.png)
+
+---
+
+## 🧾 Invoices
+
+![Invoices](docs/screenshots/invoices.png)
+
+---
+
+## 💳 Payments
+
+![Payments](docs/screenshots/payments.png)
+
+---
+
+## 💰 Expenses
+
+![Expenses](docs/screenshots/expenses.png)
+
+---
+
+## 📊 Financial Reports
+
+![Reports](docs/screenshots/reports.png)
+
+---
+
+## 📝 Audit Logs
+
+![Audit Logs](docs/screenshots/audit-logs.png)
+
+---
+
+## ⚙️ Settings
+
+![Settings](docs/screenshots/settings.png)
+
+---
+
+## 👥 Users
+
+![Users](docs/screenshots/users.png)
 
 ---
 
