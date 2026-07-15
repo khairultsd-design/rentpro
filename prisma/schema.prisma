@@ -8,7 +8,6 @@ datasource db {
 }
 
 model Property {
-  model Property {
   id             String    @id @default(cuid())
   name           String    @unique
   type           String
