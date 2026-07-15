@@ -1,7 +1,7 @@
 import TextInput from "@/components/form/TextInput";
 
 import type { Property } from "../types/property";
-
+import Button from "@/components/ui/Button";
 type PropertyFormProps = {
   mode: "create" | "edit";
   action: (formData: FormData) => void | Promise<void>;
@@ -106,12 +106,11 @@ export default function PropertyForm({
   </select>
 </div>
 
-<button
-  type="submit"
-  className="rounded-lg bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700"
->
-  {mode === "create" ? "Save Property" : "Update Property"}
-</button>
+<Button type="submit">
+  {mode === "create"
+    ? "Save Property"
+    : "Update Property"}
+</Button>
     </form>
   );
 }

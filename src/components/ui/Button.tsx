@@ -9,6 +9,9 @@ type ButtonProps = {
   type?: "button" | "submit";
   variant?: ButtonVariant;
   className?: string;
+
+  disabled?: boolean;
+  loading?: boolean;
 };
 
 const variants = {
@@ -28,18 +31,28 @@ export default function Button({
   type = "button",
   variant = "primary",
   className = "",
+  disabled = false,
+  loading = false,
 }: ButtonProps) {
   const classes = `
-    inline-flex items-center justify-center
-    rounded-xl
-    px-5
-    py-2.5
-    text-sm
-    font-semibold
-    transition
-    ${variants[variant]}
-    ${className}
-  `;
+inline-flex items-center justify-center
+rounded-xl
+px-5
+py-2.5
+text-sm
+font-semibold
+transition
+
+${variants[variant]}
+
+${
+  disabled || loading
+    ? "opacity-60 cursor-not-allowed"
+    : ""
+}
+
+${className}
+`;
 
   if (href) {
     return (
@@ -50,8 +63,12 @@ export default function Button({
   }
 
   return (
-    <button type={type} className={classes}>
-      {children}
-    </button>
+    <button
+  type={type}
+  className={classes}
+  disabled={disabled || loading}
+>
+  {loading ? "Processing..." : children}
+</button>
   );
 }
