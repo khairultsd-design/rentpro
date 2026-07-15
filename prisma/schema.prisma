@@ -8,8 +8,9 @@ datasource db {
 }
 
 model Property {
+  model Property {
   id             String    @id @default(cuid())
-  name           String
+  name           String    @unique
   type           String
   address        String
   agreementStart DateTime

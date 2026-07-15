@@ -109,7 +109,15 @@ export async function createTenancy(
       },
       tx
     );
-
+await createAuditLog(
+  {
+    userId: auditUserId,
+    module: AuditModule.TENANCY,
+    action: AuditAction.CREATE,
+    description: `Created tenancy for room ${room.roomNumber}`,
+  },
+  tx
+);
     return {
   tenancy,
   room,

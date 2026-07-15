@@ -5,7 +5,9 @@ import {
   TenancyStatus,
 } from "@prisma/client";
 
-export async function generateInvoiceNumber() {
+export async function generateInvoiceNumber(
+  db: Prisma.TransactionClient | typeof prisma = prisma
+) {
   const now = new Date();
 
   const year = now.getFullYear();
@@ -13,7 +15,7 @@ export async function generateInvoiceNumber() {
 
   const prefix = `INV-${year}${month}`;
 
-const latestInvoice = await prisma.invoice.findFirst({
+const latestInvoice = await db.invoice.findFirst({
     where: {
       invoiceNumber: {
         startsWith: prefix,
@@ -50,7 +52,7 @@ export async function createInvoice(
   data: CreateInvoiceInput,
   db: Prisma.TransactionClient | typeof prisma = prisma
 ) {
-  const invoiceNumber = await generateInvoiceNumber();
+  const invoiceNumber = await generateInvoiceNumber(db);
     
   return db.invoice.create({
     data: {
@@ -68,7 +70,7 @@ export async function createInvoice(
   });
 }
 
-export async function generateMonthlyInvoices() {
+export async function generateMonthlyInvoices(db: Prisma.TransactionClient | typeof prisma = prisma) {
   const now = new Date();
 
   const billingMonth = now.getMonth() + 1;
@@ -76,7 +78,7 @@ export async function generateMonthlyInvoices() {
 
   const dueDate = new Date(billingYear, billingMonth - 1, 7);
 
-  const activeTenancies = await prisma.tenancy.findMany({
+  const activeTenancies = await db.tenancy.findMany({
     where: {
       status: TenancyStatus.ACTIVE,
     },
@@ -86,7 +88,7 @@ export async function generateMonthlyInvoices() {
   let skipped = 0;
 
   for (const tenancy of activeTenancies) {
-    const existingInvoice = await prisma.invoice.findFirst({
+    const existingInvoice = await db.invoice.findFirst({
       where: {
         tenancyId: tenancy.id,
         billingMonth,

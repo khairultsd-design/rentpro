@@ -3,6 +3,7 @@ import {
   AuditModule,
 } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 type GetAuditLogsParams = {
   search?: string;
@@ -18,13 +19,16 @@ type AuditLogInput = {
   description: string;
 };
 
-export async function createAuditLog({
-  userId,
-  module,
-  action,
-  description,
-}: AuditLogInput) {
-  await prisma.auditLog.create({
+export async function createAuditLog(
+  {
+    userId,
+    module,
+    action,
+    description,
+  }: AuditLogInput,
+  db: Prisma.TransactionClient | PrismaClient = prisma
+) {
+  await db.auditLog.create({
     data: {
       userId,
       module,

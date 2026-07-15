@@ -35,7 +35,7 @@ export async function createPayment(
   data: CreatePaymentInput,
   auditUserId: string
 ) {
-  const result = await prisma.$transaction(async (tx) => {
+  const payment = await prisma.$transaction(async (tx) => {
     const invoice = await tx.invoice.findUnique({
       where: {
         id: data.invoiceId,
@@ -95,96 +95,6 @@ export async function createPayment(
       status = InvoiceStatus.PARTIAL;
     }
 
-    const updatedInvoice =
-      await tx.invoice.update({
-        where: {
-          id: invoice.id,
-        },
-        data: {
-          paidAmount,
-          balance,
-          status,
-        },
-      });
-
-    return {
-      payment,
-      invoice: updatedInvoice,
-    };
-  });
-
-  await createAuditLog({
-    userId: auditUserId,
-    module: AuditModule.PAYMENT,
-    action: AuditAction.CREATE,
-    description: `Recorded payment ${result.payment.receiptNo} (${result.payment.amount})`,
-  });
-
-  return result.payment;
-}
-
-export async function recordPayment(
-  data: CreatePaymentInput,
-  auditUserId: string
-) {
-  return prisma.$transaction(async (tx) => {
-    const invoice = await tx.invoice.findUnique({
-      where: {
-        id: data.invoiceId,
-      },
-    });
-
-    if (!invoice) {
-      throw new Error("Invoice not found");
-    }
-
-    
-
-const today = new Date();
-
-const startOfDay = new Date(today);
-startOfDay.setHours(0, 0, 0, 0);
-
-const endOfDay = new Date(today);
-endOfDay.setHours(23, 59, 59, 999);
-
-const todayPaymentCount = await tx.payment.count({
-  where: {
-    createdAt: {
-      gte: startOfDay,
-      lte: endOfDay,
-    },
-  },
-});
-
-const receiptNo = generateReceiptNo(todayPaymentCount + 1);
-
-    const payment = await tx.payment.create({
-      data: {
-        invoiceId: data.invoiceId,receiptNo,
-        amount: data.amount,
-        paymentDate: data.paymentDate,
-        paymentMethod: data.paymentMethod,
-        referenceNo: data.referenceNo,
-        remarks: data.remarks,
-      },
-    });
-
-    const paidAmount =
-      invoice.paidAmount + data.amount;
-
-    const balance =
-      invoice.amount - paidAmount;
-
-    let status: InvoiceStatus =
-      InvoiceStatus.PENDING;
-
-    if (balance <= 0) {
-      status = InvoiceStatus.PAID;
-    } else if (paidAmount > 0) {
-      status = InvoiceStatus.PARTIAL;
-    }
-
     await tx.invoice.update({
       where: {
         id: invoice.id,
@@ -194,12 +104,24 @@ const receiptNo = generateReceiptNo(todayPaymentCount + 1);
         balance,
         status,
       },
-    });return {
-  payment,
-  invoice,
-};
+    });
+
+    await createAuditLog(
+      {
+        userId: auditUserId,
+        module: AuditModule.PAYMENT,
+        action: AuditAction.CREATE,
+        description: `Recorded payment ${receiptNo} (${data.amount})`,
+      },
+      tx
+    );
+
+    return payment;
   });
+
+  return payment;
 }
+
 export async function getPaymentById(id: string) {
   return prisma.payment.findUnique({
     where: {
